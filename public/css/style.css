@@ -1,0 +1,288 @@
+:root {
+  --primary-bg: #0B0E11;
+  --secondary-bg: #11161D;
+  --card-bg: #141A22;
+  --primary-text: #E6E6E8;
+  --secondary-text: #9BA2AB;
+  --tertiary-text: #5D646C;
+  --accent-indigo: #7A4BFF;
+  --accent-teal: #24D7A1;
+  --alert-carmine: #E63964;
+  --divider: #1F262F;
+  --shadow: rgba(4, 7, 10, 0.8);
+}
+
+body {
+  background: var(--primary-bg);
+  color: var(--primary-text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+.navbar,
+.bg-body-tertiary {
+  background: var(--secondary-bg) !important;
+}
+
+a.nav-link {
+  color: var(--primary-text) !important;
+}
+
+.container,
+.card,
+.card-body,
+.dropdown-menu {
+  background: transparent;
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(20, 26, 34, 0.9), rgba(20, 26, 34, 0.95));
+  border: 1px solid var(--divider);
+  box-shadow: 0 6px 18px var(--shadow);
+}
+
+.card .card-title,
+h1,
+h3 {
+  color: var(--primary-text);
+}
+
+.card .card-body p,
+.card .card-body small,
+.card .card-body .comment-content {
+  color: var(--primary-text);
+}
+
+.text-muted {
+  color: var(--secondary-text) !important;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--accent-teal), #1bb08a);
+  border-color: var(--accent-teal);
+  color: #041014;
+}
+
+.btn-warning {
+  background: var(--accent-indigo);
+  border-color: var(--accent-indigo);
+  color: var(--primary-text);
+}
+
+.btn-danger {
+  background: var(--alert-carmine);
+  border-color: var(--alert-carmine);
+  color: var(--primary-text);
+}
+
+.form-control {
+  background: var(--card-bg);
+  color: var(--primary-text);
+  border: 1px solid var(--divider);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--tertiary-text);
+}
+
+hr {
+  border-color: var(--divider);
+}
+
+footer,
+.muted {
+  color: var(--secondary-text);
+}
+
+/* Improve link accents */
+a {
+  color: var(--accent-indigo);
+}
+
+a:hover {
+  color: var(--accent-teal);
+}
+
+/* small author avatar */
+.author-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Dropdown username styling */
+.navbar .dropdown-toggle {
+  color: var(--primary-text) !important;
+}
+
+/* Comment card subtle background and border */
+.comment-card {
+  background: rgba(20, 26, 34, 0.6);
+  border: 1px solid rgba(31, 38, 47, 0.6);
+}
+
+/* Subtle Buttons */
+.btn-subtle-primary {
+  background: rgba(36, 215, 161, 0.15);
+  color: var(--accent-teal);
+  border: 1px solid rgba(36, 215, 161, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-subtle-primary:hover {
+  background: rgba(36, 215, 161, 0.25);
+  color: #fff;
+  border-color: var(--accent-teal);
+}
+
+.btn-subtle-warning {
+  background: rgba(122, 75, 255, 0.15);
+  color: var(--accent-indigo);
+  border: 1px solid rgba(122, 75, 255, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-subtle-warning:hover {
+  background: rgba(122, 75, 255, 0.25);
+  color: #fff;
+  border-color: var(--accent-indigo);
+}
+
+.btn-subtle-danger {
+  background: rgba(230, 57, 100, 0.1);
+  color: #ff6b8b;
+  border: 1px solid rgba(230, 57, 100, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-subtle-danger:hover {
+  background: rgba(230, 57, 100, 0.2);
+  color: #fff;
+  border-color: var(--alert-carmine);
+}
+
+/* Sidebar Styles */
+.sidebar-sticky {
+  position: sticky;
+  top: 20px;
+}
+
+.author-card {
+  text-align: center;
+  padding: 20px;
+}
+
+.author-large-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border: 2px solid var(--accent-teal);
+}
+
+.related-blog-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.related-blog-item:hover {
+  opacity: 0.8;
+}
+
+.related-blog-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+/* Markdown Styling */
+.blog-body img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+.blog-body h1,
+.blog-body h2,
+.blog-body h3 {
+  margin-top: 25px;
+  margin-bottom: 15px;
+  color: var(--primary-text);
+}
+
+.blog-body ul,
+.blog-body ol {
+  margin-left: 20px;
+  color: var(--primary-text);
+}
+
+.blog-body blockquote {
+  border-left: 4px solid var(--accent-teal);
+  padding-left: 15px;
+  margin: 15px 0;
+  font-style: italic;
+  color: var(--secondary-text);
+}
+
+.blog-body pre {
+  background: #1e1e1e;
+  padding: 15px;
+  border-radius: 8px;
+  overflow-x: auto;
+  color: #d4d4d4;
+}
+
+.blog-body code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 5px;
+  border-radius: 4px;
+  color: var(--accent-teal);
+}
+
+/* EasyMDE Dark Theme Overrides */
+.editor-toolbar {
+  background-color: var(--secondary-bg) !important;
+  border-color: var(--divider) !important;
+}
+
+.editor-toolbar button {
+  color: var(--primary-text) !important;
+}
+
+.editor-toolbar button:hover,
+.editor-toolbar button.active {
+  background-color: var(--divider) !important;
+  border-color: var(--accent-teal) !important;
+}
+
+.editor-toolbar i {
+  color: var(--primary-text) !important;
+}
+
+.CodeMirror {
+  background-color: var(--card-bg) !important;
+  color: var(--primary-text) !important;
+  border-color: var(--divider) !important;
+}
+
+.CodeMirror-cursor {
+  border-left: 1px solid var(--accent-teal) !important;
+}
+
+.editor-preview-side,
+.editor-preview {
+  background-color: var(--card-bg) !important;
+  color: var(--primary-text) !important;
+  border-color: var(--divider) !important;
+}
+
+.editor-preview-side a,
+.editor-preview a {
+  color: var(--accent-indigo) !important;
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/heads') %>
+        <title>Edit Blog</title>
+        <!-- EasyMDE Markdown Editor -->
+        <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+        <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+</head>
+
+<body>
+    <%- include('./partials/nav') %>
+        <div class="container mt-4">
+            <h2>Edit Blog</h2>
+            <form action="/blog/<%= blog._id %>/edit" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="coverImage" class="form-label">Cover Image (choose to replace)</label>
+                    <input type="file" class="form-control" id="coverImage" name="coverImage">
+                    <small class="form-text text-muted">Current: <%= blog.coverImageURL %></small>
+                </div>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" value="<%= blog.title %>">
+                </div>
+                <div class="mb-3">
+                    <label for="body">Body</label>
+                    <textarea class="form-control" id="body" name="body" rows="10"><%= blog.body %></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="/blog/<%= blog._id %>" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+        <%- include('./partials/scripts') %>
+            <script>
+                const easyMDE = new EasyMDE({ element: document.getElementById('body') });
+            </script>
+</body>
+
+</html>
