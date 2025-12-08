@@ -40,6 +40,21 @@ a.nav-link {
   box-shadow: 0 6px 18px var(--shadow);
 }
 
+.card-img-top {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.blog-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(4, 7, 10, 0.95);
+}
+
 .card .card-title,
 h1,
 h3 {
@@ -285,4 +300,199 @@ a:hover {
 .editor-preview-side a,
 .editor-preview a {
   color: var(--accent-indigo) !important;
+}
+
+.auth-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 2rem;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.editor-container {
+  max-width: 1200px;
+  width: 95%;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Split Screen Container */
+/* Split Screen Container */
+.split-screen {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  /* Move the background image to the parent container so it's behind everything */
+  background-image: url('/images/Buddha.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* 2. Make the left panel transparent and blurry */
+/* 2. Make the left panel transparent and blurry */
+.auth-left {
+  flex: 1;
+  /* Takes 50% width */
+  /* CHANGED: Lowered from 0.85 to 0.60 for more transparency */
+  background-color: rgba(10, 10, 10, 0.40);
+
+  /* This blur is doing the heavy lifting to keep text readable */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  /* Optional subtle border */
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 400px;
+  padding: 3rem;
+  /* Increased padding for more space */
+
+  /* Add the animation settings */
+  animation-name: fadeInUp;
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+  animation-timing-function: ease-out;
+}
+
+/* Target the help text under the email input */
+.auth-box .form-text,
+.auth-box small {
+  color: rgba(255, 255, 255, 0.8) !important;
+  /* Make it a bright, whitish-grey */
+  font-weight: 500;
+  /* Make it slightly bolder */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  /* Add a tiny shadow for contrast */
+}
+
+/* Define the animation named "fadeInUp" */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+    /* Start 30px lower */
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    /* End in final position */
+  }
+}
+
+/* Optional: Add this to your h2 (Sign In) so it pops against the background */
+.auth-box h2,
+.auth-box label {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* 3. Make the right panel transparent so the main background shows */
+.auth-right {
+  flex: 1;
+  background-color: transparent;
+  /* No background color needed here anymore */
+}
+
+/* Hero Section Styles */
+.hero-card {
+  height: 450px;
+  /* Tall banner */
+  overflow: hidden;
+  position: relative;
+  border-radius: 15px;
+}
+
+.hero-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+  /* Darkens image so text is readable */
+  transition: transform 0.5s ease;
+}
+
+/* Zoom effect on hover */
+.hero-card:hover .hero-img {
+  transform: scale(1.05);
+}
+
+.hero-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  /* Fade to black at bottom */
+}
+
+/* Cinematic Blog Header Styles */
+.blog-banner {
+  height: 60vh;
+  /* Takes up 60% of the screen height */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  /* Parallax effect! Image stays still while you scroll */
+}
+
+.banner-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  /* Dark overlay for readability */
+  height: 100%;
+  width: 100%;
+}
+
+.text-shadow {
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* 1. The Base State (Blends in) */
+.form-control {
+  /* Low opacity background (30% visible) */
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  /* Subtle border */
+
+  /* This makes the change smooth instead of instant */
+  transition: all 0.3s ease;
+}
+
+/* 2. The Hover State (User moves mouse over it) */
+.form-control:hover {
+  /* Slightly darker/more visible (50%) */
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.5);
+  cursor: text;
+}
+
+/* 3. The Focus State (User clicks to type - Most Important!) */
+.form-control:focus {
+  /* Solid background for readability (90% - 100%) */
+  background-color: rgba(0, 0, 0, 1) !important;
+
+  /* Add a glow or border color to show it's active */
+  border-color: #0d6efd;
+  /* Or your green theme color */
+  box-shadow: 0 0 15px rgba(13, 110, 253, 0.3);
+  /* Soft glow */
+  outline: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
