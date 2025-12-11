@@ -19,7 +19,8 @@
                                     data-bs-ride="carousel">
 
                                     <div class="carousel-indicators">
-                                        <% featuredBlogs.forEach((blog, index)=> { %>
+                                        <% featuredBlogs.forEach((blog, index)=>
+                                            { %>
                                             <button type="button" data-bs-target="#heroCarousel"
                                                 data-bs-slide-to="<%= index %>"
                                                 class="<%= index === 0 ? 'active' : '' %>" aria-current="true"></button>
@@ -27,7 +28,8 @@
                                     </div>
 
                                     <div class="carousel-inner">
-                                        <% featuredBlogs.forEach((blog, index)=> { %>
+                                        <% featuredBlogs.forEach((blog, index)=>
+                                            { %>
                                             <div class="carousel-item <%= index === 0 ? 'active' : '' %>"
                                                 data-bs-interval="5000">
                                                 <div style="height: 500px; position: relative;">
@@ -39,7 +41,8 @@
                                                         style="bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
 
                                                         <span class="badge bg-danger mb-2">
-                                                            <i class="fa-solid fa-fire"></i> Trending
+                                                            <i class="fa-solid fa-fire"></i>
+                                                            Trending
                                                         </span>
 
                                                         <h1 class="display-4 fw-bold text-white">
@@ -51,7 +54,7 @@
                                                         </p>
 
                                                         <a href="/blog/<%= blog._id %>"
-                                                            class="btn btn-primary btn-lg mt-3 px-4 rounded-pill">
+                                                            class="btn btn-ghost btn-lg mt-3 px-4 rounded-pill">
                                                             Read Article <i class="fa-solid fa-arrow-right ms-2"></i>
                                                         </a>
                                                     </div>
@@ -71,40 +74,52 @@
                                 </div>
                             </div>
                             <% } %>
+                                <!-- Talk of the Town Section -->
                                 <div class="container mt-5">
                                     <h3 class="text-white mb-4"><i class="fa-solid fa-comments text-warning me-2"></i>
                                         Talk of the Town
                                     </h3>
 
-                                    <div class="d-flex overflow-auto pb-4 gap-3 no-scrollbar"
-                                        style="white-space: nowrap;">
-                                        <% talkOfTheTown.forEach(blog=> { %>
-                                            <div class="card bg-dark text-white border-0 shadow-sm"
-                                                style="min-width: 280px; max-width: 280px;">
-                                                <img src="<%= blog.coverImageURL %>" class="card-img-top"
-                                                    style="height: 160px; object-fit: cover;" alt="...">
-                                                <div class="card-body">
-                                                    <h6 class="card-title text-truncate">
-                                                        <%= blog.title %>
-                                                    </h6>
-                                                    <small class="text-muted">
-                                                        <%= blog.commentsCount || 0 %> Comments
-                                                    </small>
-                                                    <a href="/blog/<%= blog._id %>" class="stretched-link"></a>
+                                    <div class="row row-cols-1 row-cols-md-4 g-4" id="talkTownGrid">
+                                        <% talkOfTheTown.forEach((blog, index)=>
+                                            { %>
+                                            <div class="col <%= index >= 4 ? 'hidden-card' : '' %>">
+                                                <div class="card h-100 hover-card text-white">
+                                                    <img src="<%= blog.coverImageURL %>" class="card-img-top"
+                                                        alt="<%= blog.title %>">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title text-truncate">
+                                                            <%= blog.title %>
+                                                        </h6>
+                                                        <small class="text-muted">
+                                                            <%= blog.commentsCount || 0 %> Comments
+                                                        </small>
+                                                        <a href="/blog/<%= blog._id %>" class="stretched-link"></a>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <% }) %>
                                     </div>
+
+                                    <% if (talkOfTheTown.length> 4) { %>
+                                        <div class="text-center mt-4">
+                                            <button id="loadMoreBtn" class="btn btn-outline-warning rounded-pill px-4">
+                                                View More <i class="fa-solid fa-chevron-down ms-2"></i>
+                                            </button>
+                                        </div>
+                                        <% } %>
                                 </div>
 
+                                <!-- Latest Drops Section -->
                                 <div class="container mt-5">
-                                    <h3 class="text-white mb-4 border-bottom border-secondary pb-2">Latest Drops</h3>
+                                    <h3 class="text-white mb-4">Latest Drops 💥
+                                    </h3>
                                     <div class="row row-cols-1 row-cols-md-3 g-4">
                                         <% latest.forEach(blog=> { %>
                                             <div class="col">
-                                                <div class="card h-100 bg-dark text-white border-secondary hover-card">
+                                                <div class="card h-100 hover-card text-white">
                                                     <img src="<%= blog.coverImageURL %>" class="card-img-top"
-                                                        style="height: 200px; object-fit: cover;">
+                                                        alt="<%= blog.title %>">
                                                     <div class="card-body">
                                                         <h5 class="card-title">
                                                             <%= blog.title %>
@@ -119,41 +134,54 @@
                                             <% }) %>
                                     </div>
                                     <div class="text-center mt-5 mb-5">
-                                        <a href="/blogs" class="btn btn-outline-light px-5 py-2 rounded-pill">
+                                        <a href="/blogs" class="btn btn-ghost px-5 py-2 rounded-pill">
                                             View All Posts <i class="fa-solid fa-arrow-right ms-2"></i>
                                         </a>
                                     </div>
                                 </div>
 
+                                <!-- Deep Dives Section -->
                                 <div class="container mt-5 mb-5">
-                                    <h3 class="text-white mb-4">Deep Dives 🤿</h3>
-                                    <div class="row">
+                                    <h3 class="text-white mb-4">Deep Dives 🤿
+                                    </h3>
+                                    <div class="row row-cols-1 row-cols-md-2 g-4">
                                         <% deepDives.forEach(blog=> { %>
-                                            <div class="col-md-6 mb-4">
-                                                <div class="card bg-dark text-white border-0 shadow-lg overflow-hidden">
-                                                    <div class="row g-0">
-                                                        <div class="col-4">
-                                                            <img src="<%= blog.coverImageURL %>" class="img-fluid h-100"
-                                                                style="object-fit: cover;">
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <div
-                                                                class="card-body d-flex flex-column h-100 justify-content-center">
-                                                                <h5 class="card-title">
-                                                                    <%= blog.title %>
-                                                                </h5>
-                                                                <p class="card-text small text-muted">A long read...</p>
-                                                                <a href="/blog/<%= blog._id %>"
-                                                                    class="btn btn-sm btn-outline-light w-50 mt-2">Read
-                                                                    Now</a>
-                                                            </div>
-                                                        </div>
+                                            <div class="col">
+                                                <div class="card h-100 hover-card text-white">
+                                                    <img src="<%= blog.coverImageURL %>" class="card-img-top"
+                                                        alt="<%= blog.title %>">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">
+                                                            <%= blog.title %>
+                                                        </h5>
+                                                        <p class="card-text small text-muted">
+                                                            A long read...</p>
+                                                        <a href="/blog/<%= blog._id %>" class="stretched-link"></a>
                                                     </div>
                                                 </div>
                                             </div>
                                             <% }) %>
                                     </div>
                                 </div>
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const loadMoreBtn = document.getElementById('loadMoreBtn');
+                                        if (loadMoreBtn) {
+                                            loadMoreBtn.addEventListener('click', function () {
+                                                const hiddenCards = document.querySelectorAll('#talkTownGrid .hidden-card');
+                                                // Show next 4
+                                                for (let i = 0; i < 4 && i < hiddenCards.length; i++) {
+                                                    hiddenCards[i].classList.remove('hidden-card');
+                                                }
+                                                // Hide button if no more hidden cards
+                                                if (document.querySelectorAll('#talkTownGrid .hidden-card').length === 0) {
+                                                    loadMoreBtn.style.display = 'none';
+                                                }
+                                            });
+                                        }
+                                    });
+                                </script>
                                 <%- include('./partials/scripts') %>
 </body>
 

@@ -12,7 +12,7 @@ const blogSchema = new Schema({
     coverImageURL: {
         type: String,
         required: false,
-        default: '/images/defaultBlog.png',
+        default: 'https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452965/defaultBlog_uplqdu.png',
     },
     createdBy: {
         type: Schema.Types.ObjectId,

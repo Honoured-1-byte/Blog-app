@@ -6,7 +6,8 @@
         <title>All Blogs | Blogify</title>
 </head>
 
-<body class="bg-dark text-white">
+<body
+    style="background: radial-gradient(circle at top, rgba(26, 28, 41, 0.7), rgba(13, 13, 13, 0.9)), url('/images/intersteller.jpg') no-repeat center center/cover; min-height: 100vh; color: white; background-attachment: fixed;">
     <%- include('./partials/nav') %>
 
         <div class="container mt-5">
@@ -18,7 +19,9 @@
                     <form action="/search" method="GET" class="d-flex gap-2">
                         <input type="text" name="query" value="<%= locals.query || '' %>"
                             class="form-control bg-dark text-white border-secondary" placeholder="Search topics...">
-                        <button class="btn btn-primary">Search</button>
+                        <button class="btn btn-cyan" type="submit">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
                     </form>
                 </div>
             </div>

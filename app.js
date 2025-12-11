@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -9,10 +10,10 @@ const Blog = require('./models/blog');
 const { checkForAuthenticationCookie } = require('./middlewares/authentication');
 
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
 mongoose
-    .connect('mongodb://127.0.0.1:27017/blogify')
+    .connect(process.env.MONGO_URL)
     .then((e) => console.log('DB Connected'))
     .catch((err) => console.log('DB Connection Error:', err));
 
@@ -27,6 +28,7 @@ app.use(checkForAuthenticationCookie('token'));
 
 app.use((req, res, next) => {
     res.locals.user = req.user;
+    res.locals.path = req.path;
     next();
 });
 
@@ -98,21 +100,25 @@ app.get('/blogs', async (req, res) => {
 app.get('/search', async (req, res) => {
     try {
         const query = req.query.query;
-        // Search title OR body, case-insensitive
-        const blogs = await Blog.find({
-            $or: [
-                { title: { $regex: query, $options: "i" } },
-                { body: { $regex: query, $options: "i" } }
-            ]
-        }).populate('createdBy');
+        // If empty search, go home
+        if (!query) return res.redirect('/');
 
+        // Find blogs that match the title OR body (Case Insensitive 'i')
+        const results = await Blog.find({
+            $or: [
+                { title: { $regex: query, $options: 'i' } },
+                { body: { $regex: query, $options: 'i' } }
+            ]
+        });
+
+        // Reuse the 'allBlogs' view to show results
         res.render('allBlogs', {
             user: req.user,
-            blogs: blogs,
-            query: query // Pass query back to view
+            blogs: results,
+            query: query
         });
     } catch (error) {
-        console.log("Error searching:", error);
+        console.log("Search Error:", error);
         res.redirect('/');
     }
 });

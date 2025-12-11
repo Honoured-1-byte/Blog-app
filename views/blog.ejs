@@ -37,8 +37,8 @@
 
                     <div class="mb-4">
                         <% if (user && String(user._id)===String(blog.createdBy && blog.createdBy._id)) { %>
-                            <a href="/blog/<%= blog._id %>/edit" class="btn btn-subtle-warning me-2">Edit</a>
-                            <a href="/blog/<%= blog._id %>/delete" class="btn btn-subtle-danger"
+                            <a href="/blog/<%= blog._id %>/edit" class="btn btn-outline-warning me-2">Edit</a>
+                            <a href="/blog/<%= blog._id %>/delete" class="btn btn-outline-danger"
                                 onclick="return confirm('Delete this blog?')">Delete</a>
                             <% } %>
                     </div>

@@ -1,18 +1,20 @@
 {
   "name": "blog-app",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "description": "Blog-app is a simple blogging platform built with React and Node.js.",
   "dependencies": {
+    "cloudinary": "^2.8.0",
     "cookie-parser": "^1.4.7",
     "dompurify": "^3.2.3",
+    "dotenv": "^17.2.3",
     "easymde": "^2.20.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
@@ -20,7 +22,8 @@
     "jsonwebtoken": "^9.0.2",
     "marked": "^15.0.3",
     "mongoose": "^9.0.0",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"

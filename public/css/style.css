@@ -42,8 +42,40 @@ a.nav-link {
 
 .card-img-top {
   width: 100%;
-  height: 200px;
+  height: 220px;
+  /* Fixed height */
   object-fit: cover;
+  /* Crops to fit */
+  object-position: center;
+  /* Focus center */
+}
+
+/* 3. CARD HOVER EFFECTS (Darker text, brightness dip) */
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  /* Removes the border as requested */
+  background-color: #1e1e1e;
+  /* Default dark background */
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Darken image brightness on hover */
+.hover-card:hover .card-img-top {
+  filter: brightness(0.7);
+  /* Dim the image slightly */
+  transition: filter 0.3s ease;
+}
+
+/* Make text background slightly darker on hover */
+.hover-card:hover .card-body {
+  background-color: #121212 !important;
+  /* One shade darker than #1e1e1e */
+  transition: background-color 0.3s ease;
 }
 
 .blog-card {
@@ -322,13 +354,402 @@ a:hover {
 }
 
 /* Split Screen Container */
+/* Signup Specific Background */
+.signup-bg {
+  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452879/-Buddha_ojlarp.jpg') !important;
+}
+
+/* 2. Make the left panel transparent and blurry */
+.auth-left {
+  flex: 1;
+  /* Takes 50% width */
+  /* CHANGED: Lowered from 0.85 to 0.60 for more transparency */
+  background-color: rgba(10, 10, 10, 0.40);
+
+  /* This blur is doing the heavy lifting to keep text readable */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  /* Optional subtle border */
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 400px;
+  padding: 3rem;
+  /* Increased padding for more space */
+
+  /* Add the animation settings */
+  animation-name: fadeInUp;
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+  animation-timing-function: ease-out;
+}
+
+/* Target the help text under the email input */
+.auth-box .form-text,
+.auth-box small {
+  color: rgba(255, 255, 255, 0.8) !important;
+  /* Make it a bright, whitish-grey */
+  font-weight: 500;
+  /* Make it slightly bolder */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  /* Add a tiny shadow for contrast */
+}
+
+/* Define the animation named "fadeInUp" */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+    /* Start 30px lower */
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    /* End in final position */
+  }
+}
+
+/* Optional: Add this to your h2 (Sign In) so it pops against the background */
+.auth-box h2,
+.auth-box label {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* 3. Make the right panel transparent so the main background shows */
+.auth-right {
+  flex: 1;
+  background-color: transparent;
+  /* No background color needed here anymore */
+}
+
+/* Hero Section Styles */
+.hero-card {
+  height: 450px;
+  /* Tall banner */
+  overflow: hidden;
+  position: relative;
+  border-radius: 15px;
+}
+
+.hero-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+  /* Darkens image so text is readable */
+  transition: transform 0.5s ease;
+}
+
+/* Zoom effect on hover */
+.hero-card:hover .hero-img {
+  transform: scale(1.05);
+}
+
+.hero-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  /* Fade to black at bottom */
+}
+
+/* Cinematic Blog Header Styles */
+.blog-banner {
+  height: 60vh;
+  /* Takes up 60% of the screen height */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  /* Parallax effect! Image stays still while you scroll */
+}
+
+.banner-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  /* Dark overlay for readability */
+  height: 100%;
+  width: 100%;
+}
+
+.text-shadow {
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* 1. The Base State (Blends in) */
+.form-control {
+  /* Low opacity background (30% visible) */
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  /* Subtle border */
+
+  /* This makes the change smooth instead of instant */
+  transition: all 0.3s ease;
+}
+
+/* 2. The Hover State (User moves mouse over it) */
+.form-control:hover {
+  /* Slightly darker/more visible (50%) */
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.5);
+  cursor: text;
+}
+
+/* 3. The Focus State (User clicks to type - Most Important!) */
+.form-control:focus {
+  /* Solid background for readability (90% - 100%) */
+  background-color: rgba(0, 0, 0, 1) !important;
+
+  /* Add a glow or border color to show it's active */
+  border-color: #0d6efd;
+  /* Or your green theme color */
+  box-shadow: 0 0 15px rgba(13, 110, 253, 0.3);
+  /* Soft glow */
+  outline: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  color: var(--primary-text) !important;
+  border-color: var(--divider) !important;
+}
+
+.editor-preview-side a,
+.editor-preview a {
+  color: var(--accent-indigo) !important;
+}
+
+.auth-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 2rem;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.editor-container {
+  max-width: 1200px;
+  width: 95%;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Split Screen Container */
 /* Split Screen Container */
 .split-screen {
   display: flex;
   height: 100vh;
   width: 100%;
   /* Move the background image to the parent container so it's behind everything */
-  background-image: url('/images/Buddha.jpg');
+  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452879/-Buddha_ojlarp.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* 2. Make the left panel transparent and blurry */
+/* 2. Make the left panel transparent and blurry */
+.auth-left {
+  flex: 1;
+  /* Takes 50% width */
+  /* CHANGED: Lowered from 0.85 to 0.60 for more transparency */
+  background-color: rgba(10, 10, 10, 0.40);
+
+  /* This blur is doing the heavy lifting to keep text readable */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  /* Optional subtle border */
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 400px;
+  padding: 3rem;
+  /* Increased padding for more space */
+
+  /* Add the animation settings */
+  animation-name: fadeInUp;
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+  animation-timing-function: ease-out;
+}
+
+/* Target the help text under the email input */
+.auth-box .form-text,
+.auth-box small {
+  color: rgba(255, 255, 255, 0.8) !important;
+  /* Make it a bright, whitish-grey */
+  font-weight: 500;
+  /* Make it slightly bolder */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  /* Add a tiny shadow for contrast */
+}
+
+/* Define the animation named "fadeInUp" */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+    /* Start 30px lower */
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    /* End in final position */
+  }
+}
+
+/* Optional: Add this to your h2 (Sign In) so it pops against the background */
+.auth-box h2,
+.auth-box label {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* 3. Make the right panel transparent so the main background shows */
+.auth-right {
+  flex: 1;
+  background-color: transparent;
+  /* No background color needed here anymore */
+}
+
+/* Hero Section Styles */
+.hero-card {
+  height: 450px;
+  /* Tall banner */
+  overflow: hidden;
+  position: relative;
+  border-radius: 15px;
+}
+
+/* Ensure button is clickable above the overlay */
+.carousel-caption .btn {
+  position: relative;
+  z-index: 10;
+}
+
+.hero-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+  /* Darkens image so text is readable */
+  transition: transform 0.5s ease;
+}
+
+/* Zoom effect on hover */
+.hero-card:hover .hero-img {
+  transform: scale(1.05);
+}
+
+.hero-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  /* Fade to black at bottom */
+}
+
+/* Cinematic Blog Header Styles */
+.blog-banner {
+  height: 60vh;
+  /* Takes up 60% of the screen height */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  /* Parallax effect! Image stays still while you scroll */
+}
+
+.banner-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  /* Dark overlay for readability */
+  height: 100%;
+  width: 100%;
+}
+
+.text-shadow {
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* 1. The Base State (Blends in) */
+.form-control {
+  /* Low opacity background (30% visible) */
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  /* Subtle border */
+
+  /* This makes the change smooth instead of instant */
+  transition: all 0.3s ease;
+}
+
+/* 2. The Hover State (User moves mouse over it) */
+.form-control:hover {
+  /* Slightly darker/more visible (50%) */
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.5);
+  cursor: text;
+}
+
+/* 3. The Focus State (User clicks to type - Most Important!) */
+.form-control:focus {
+  /* Solid background for readability (90% - 100%) */
+  background-color: rgba(0, 0, 0, 1) !important;
+
+  /* Add a glow or border color to show it's active */
+  border-color: #0d6efd;
+  /* Or your green theme color */
+  box-shadow: 0 0 15px rgba(13, 110, 253, 0.3);
+  /* Soft glow */
+  outline: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+/* Utility for Load More functionality */
+.hidden-card {
+  display: none !important;
+}
+
+/* Overrides Bootstrap's default blue focus glow */
+.form-control:focus {
+  background-color: #1a1a1a !important;
+  /* Keep it dark */
+  color: white !important;
+  border-color: #00ffff !important;
+  /* Cyan Border */
+}
+
+.editor-container {
+  max-width: 1200px;
+  width: 95%;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Split Screen Container */
+/* Split Screen Container */
+.split-screen {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  /* Move the background image to the parent container so it's behind everything */
+  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452965/defaultBlog_uplqdu.png');
   background-size: cover;
   background-position: center;
 }
@@ -492,7 +913,78 @@ a:hover {
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+/* Utility for Load More functionality */
+.hidden-card {
+  display: none !important;
+}
+
+
+
+
+
+/* Custom Cyan Button */
+.btn-cyan {
+  background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+  color: white;
+  border: none;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+}
+
+.btn-cyan:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 210, 255, 0.5);
+  color: white;
+}
+
+.text-cyan {
+  color: #00d2ff !important;
+}
+
+/* Ghost Button (Outline) */
+.btn-ghost {
+  background: transparent;
+  border: 2px solid #00d2ff;
+  color: #00d2ff;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-ghost:hover {
+  background: #00d2ff;
+  color: white;
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Flips the element horizontally */
+.mirror-bg {
+  transform: scaleX(-1);
+}
+
+/* Sign-In Specific Background */
+.signin-bg {
+  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452877/Buddha_sz0tpe.jpg') !important;
+}
+
+/* 1. The Magic Flip Class */
+html.light-mode {
+  /* Invert every color on the screen */
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* 2. The "Un-Flip" (Fixes images/videos) */
+/* We invert them AGAIN so they go back to normal */
+html.light-mode img,
+html.light-mode video,
+html.light-mode .split-screen::before,
+html.light-mode .file-upload-wrapper,
+html.light-mode .card-img-top,
+html.light-mode .hero-img,
+html.light-mode .blog-banner,
+html.light-mode .author-avatar,
+html.light-mode .author-large-img,
+html.light-mode .related-blog-img,
+html.light-mode .blog-body img {
+  filter: invert(1) hue-rotate(180deg) !important;
 }
