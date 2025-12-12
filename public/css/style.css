@@ -1007,3 +1007,23 @@ body {
   background-size: 50px 50px;
   /* Controls the size of the grid squares */
 }
+/* 1. For Blog Cards */
+.card-img-top, .profile-avatar {
+    background-color: #0f172a; /* Deep Navy placeholder */
+    position: relative;
+}
+
+/* 2. For the Body Background */
+body {
+    background-color: #050505; /* Ensure the void is black, not white, before image loads */
+}
+
+/* 3. Smooth Fade In (Optional Polish) */
+img {
+    animation: fade-in 0.5s ease-in;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

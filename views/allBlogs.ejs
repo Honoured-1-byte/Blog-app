@@ -30,8 +30,8 @@
                 <% blogs.forEach(blog=> { %>
                     <div class="col">
                         <div class="card h-100 bg-dark text-white border-secondary shadow-sm hover-card">
-                            <img src="<%= blog.coverImageURL %>" class="card-img-top"
-                                style="height: 220px; object-fit: cover;">
+                            <img src="<%= blog.coverImageURL.replace('/upload/', '/upload/f_auto,q_auto,w_600/') %>"
+                                class="card-img-top" style="height: 220px; object-fit: cover;">
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <%= blog.title %>

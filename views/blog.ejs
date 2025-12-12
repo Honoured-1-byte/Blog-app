@@ -205,7 +205,7 @@
                                     <h5 class="card-title mb-3">Related Posts</h5>
                                     <% relatedBlogs.forEach(rb=> { %>
                                         <a href="/blog/<%= rb._id %>" class="related-blog-item">
-                                            <img src="<%= rb.coverImageURL || '/images/defaultBlog.png' %>"
+                                            <img src="<%= rb.coverImageURL.replace('/upload/', '/upload/f_auto,q_auto,w_600/') || '/images/defaultBlog.png' %>"
                                                 class="related-blog-img" alt="<%= rb.title %>">
                                             <div>
                                                 <h6 class="mb-1 text-white text-truncate" style="max-width: 180px;">
