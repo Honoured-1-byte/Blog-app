@@ -34,51 +34,32 @@ app.use((req, res, next) => {
 
 app.get('/', async (req, res) => {
     try {
-        // 1. Fetch EVERYTHING (Nuclear Option to guarantee data availability)
-        // We fetch all blogs and populate their createdBy user
-        const allBlogsOriginal = await Blog.find({}).populate('createdBy');
+        const allBlogs = await Blog.find({}).sort({ createdAt: -1 }).lean();
 
-        // We fetch ALL comments to manually map them (safest way if lookup fails)
-        const allComments = await require('./models/comments').find({});
+        // 2. TOP SLIDER (Most Liked)
+        // We clone the array and sort by likes length
+        const mostLiked = [...allBlogs].sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0)).slice(0, 5);
 
-        // 2. Process Data in JavaScript (Fail-proof)
-        const allBlogs = allBlogsOriginal.map(blog => {
-            const blogObj = blog.toObject();
-            // Attach comments count manually
-            const blogComments = allComments.filter(c => String(c.blogId) === String(blog._id));
-            blogObj.commentsCount = blogComments.length;
-            // Ensure body exists
-            blogObj.body = blogObj.body || "";
-            return blogObj;
-        });
+        // 3. TALK OF THE TOWN (Most Comments) - "Trending" Logic: Views + Likes*2
+        const trending = [...allBlogs].sort((a, b) => {
+            const scoreA = (a.views || 0) + ((a.likes?.length || 0) * 2);
+            const scoreB = (b.views || 0) + ((b.likes?.length || 0) * 2);
+            return scoreB - scoreA;
+        }).slice(0, 4);
 
-        // 3. Create Lists using JS Sort
-
-        // Latest: Sort by createdAt descending
-        const latestBlogs = [...allBlogs].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 6);
-
-        // Talk of the Town: Sort by commentsCount descending
-        const mostCommented = [...allBlogs].sort((a, b) => b.commentsCount - a.commentsCount).slice(0, 8);
-
-        // Deep Dives: Sort by body length descending
-        const longReads = [...allBlogs].sort((a, b) => b.body.length - a.body.length).slice(0, 4);
-
-        // Featured: Top 3 most commented (or latest if no comments)
-        let featuredBlogs = mostCommented.slice(0, 3);
-        if (featuredBlogs.length === 0) featuredBlogs = latestBlogs.slice(0, 3);
+        // 4. DEEPER DIVES (Longest Content)
+        const deepDives = [...allBlogs].sort((a, b) => (b.body?.length || 0) - (a.body?.length || 0)).slice(0, 4);
 
         res.render('home', {
             user: req.user,
-            featuredBlogs: featuredBlogs,
-            talkOfTheTown: mostCommented,
-            latest: latestBlogs,
-            deepDives: longReads
+            latest: allBlogs.slice(0, 6), // Show top 6 new ones
+            slider: mostLiked,
+            trending: trending,
+            deepDives: deepDives
         });
-
     } catch (error) {
         console.log("Error fetching home:", error);
-        // Absolute fallback to empty arrays to prevent crash
-        res.render('home', { user: req.user, featuredBlogs: [], talkOfTheTown: [], latest: [], deepDives: [] });
+        res.render('home', { user: req.user, slider: [], trending: [], latest: [], deepDives: [] });
     }
 });
 
@@ -125,5 +106,11 @@ app.get('/search', async (req, res) => {
 
 app.use('/user', userRoutes);
 app.use('/blog', blogRoutes);
+
+// The "Catch-All" 404 Route
+// (Must be the last route in the file)
+app.use((req, res) => {
+    res.status(404).render('404');
+});
 
 app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));

@@ -1,0 +1,183 @@
+<style>
+    /* FOOTER STYLES */
+    .akashic-footer {
+        background: #020617;
+        /* Deepest Navy */
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        color: #888;
+        padding: 80px 0 40px;
+        position: relative;
+        margin-top: auto;
+        /* Pushes footer to bottom if content is short */
+    }
+
+    .footer-brand {
+        font-family: 'Cinzel', serif;
+        font-size: 1.5rem;
+        color: #fff;
+        text-decoration: none;
+        letter-spacing: 2px;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    .footer-desc {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        max-width: 300px;
+    }
+
+    .footer-heading {
+        color: #fff;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        margin-bottom: 25px;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+
+    .footer-links a {
+        color: #888;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-size: 0.95rem;
+    }
+
+    .footer-links a:hover {
+        color: #0dcaf0;
+        /* Cyan Hover */
+        padding-left: 5px;
+        /* Tiny slide effect */
+    }
+
+    .social-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        text-decoration: none;
+        margin-right: 10px;
+        transition: all 0.3s;
+    }
+
+    .social-btn:hover {
+        background: #0dcaf0;
+        color: #000;
+        transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        margin-top: 60px;
+        padding-top: 30px;
+        font-size: 0.85rem;
+    }
+</style>
+
+<footer class="akashic-footer">
+    <div class="container">
+        <div class="row g-5">
+
+            <div class="col-lg-4">
+                <a href="/" class="footer-brand">The Akashic Records</a>
+                <p class="footer-desc">
+                    Documenting the anomalies of the digital universe. A curated archive of thoughts, theories, and
+                    tech.
+                </p>
+                <div class="mt-4">
+                    <a href="https://github.com/Honoured-1-byte" class="social-btn" target="_blank"><i
+                            class="fa-brands fa-github"></i></a>
+                    <a href="https://leetcode.com/u/Honoured_One_25/" class="social-btn" target="_blank"><i
+                            class="fa-solid fa-code"></i></a>
+                    <a href="https://www.linkedin.com/in/yash-seth-9b0536351/" class="social-btn" target="_blank"><i
+                            class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-2 offset-lg-1">
+                <h5 class="footer-heading">Explore</h5>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/search?query=tech">Deep Dives</a></li>
+                    <li><a href="/search?query=anime">Latest Drops</a></li>
+                    <li><a href="/user/profile?tab=about">About Author</a></li>
+                </ul>
+            </div>
+
+            <div class="col-6 col-lg-2">
+                <h5 class="footer-heading">Account</h5>
+                <ul class="footer-links">
+                    <% if (locals.user) { %>
+                        <li><a href="/user/profile">My Profile</a></li>
+                        <li><a href="/user/profile?tab=saved">Saved</a></li>
+                        <li><a href="/blog/add-new">Write New</a></li>
+                        <li><a href="/user/logout">Logout</a></li>
+                        <% } else { %>
+                            <li><a href="/user/signin">Sign In</a></li>
+                            <li><a href="/user/signup">Get Started</a></li>
+                            <% } %>
+                </ul>
+            </div>
+
+            <div class="col-lg-3">
+                <h5 class="footer-heading">Stay Updated</h5>
+                <p class="small mb-3">Get the latest anomalies delivered to your inbox.</p>
+                <form id="newsletterForm" class="d-flex gap-2 align-items-center" onsubmit="handleSubscribe(event)">
+                    <input type="email" class="form-control bg-dark border-secondary text-light form-control-sm"
+                        placeholder="Email address" required>
+                    <button type="submit" id="subBtn" class="btn btn-info btn-sm fw-bold">Join</button>
+                </form>
+
+                <script>
+                    function handleSubscribe(e) {
+                        e.preventDefault(); // Stop page from reloading
+
+                        const btn = document.getElementById('subBtn');
+                        const originalText = btn.innerText;
+
+                        // Change button to loading state
+                        btn.innerText = "...";
+                        btn.disabled = true;
+
+                        // Wait 1 second (simulating server request)
+                        setTimeout(() => {
+                            btn.classList.remove('btn-info');
+                            btn.classList.add('btn-success');
+                            btn.innerHTML = '<i class="fa-solid fa-check"></i> Joined';
+
+                            // Optional: Reset after 3 seconds
+                            setTimeout(() => {
+                                btn.classList.remove('btn-success');
+                                btn.classList.add('btn-info');
+                                btn.innerText = originalText;
+                                btn.disabled = false;
+                                document.getElementById('newsletterForm').reset();
+                            }, 3000);
+                        }, 1000);
+                    }
+                </script>
+            </div>
+        </div>
+
+        <div class="footer-bottom d-flex justify-content-between align-items-center flex-wrap">
+            <div>&copy; <%= new Date().getFullYear() %> Akashic Records. All rights reserved.</div>
+            <div>
+                <a href="#" class="text-secondary text-decoration-none me-3">Privacy Policy</a>
+                <a href="#" class="text-secondary text-decoration-none">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>

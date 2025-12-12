@@ -61,7 +61,7 @@ router.post('/', upload.single('coverImage'), async (req, res) => {
             coverImageURL: coverImageURL,
         });
 
-        console.log(`New Blog Created: "${title}"`);
+
         return res.redirect(`/blog/${blog._id}`);
     } catch (err) {
         console.error('Blog creation error:', err.message);
@@ -69,9 +69,68 @@ router.post('/', upload.single('coverImage'), async (req, res) => {
     }
 });
 
+// PUT THIS BEFORE YOUR router.get('/:id') route to avoid conflicts
+
+// API to Toggle Like
+router.get("/like/:blogId", async (req, res) => {
+    try {
+        // 1. Check if user is logged in
+        if (!req.user) {
+            return res.status(401).json({ error: "Please sign in to like posts" });
+        }
+
+        const blog = await Blog.findById(req.params.blogId);
+        const userId = req.user._id;
+
+        // 2. Check if user already liked it
+        const isLiked = blog.likes.includes(userId);
+
+        if (isLiked) {
+            // If liked, remove user (Unlike)
+            await Blog.findByIdAndUpdate(req.params.blogId, {
+                $pull: { likes: userId },
+            });
+            return res.json({ status: "unliked" });
+        } else {
+            // If not liked, add user (Like)
+            await Blog.findByIdAndUpdate(req.params.blogId, {
+                $push: { likes: userId },
+            });
+            return res.json({ status: "liked" });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Server error" });
+    }
+});
+
+// API to Toggle Save (Bookmark)
+router.get("/save/:blogId", async (req, res) => {
+    if (!req.user) return res.status(401).json({ error: "Login required" });
+
+    const blogId = req.params.blogId;
+    const userId = req.user._id;
+
+    const User = require('../../models/user'); // Ensure User model is imported
+
+    const user = await User.findById(userId);
+    const isSaved = user.savedBlogs && user.savedBlogs.includes(blogId);
+
+    if (isSaved) {
+        // Unsave
+        await User.findByIdAndUpdate(userId, { $pull: { savedBlogs: blogId } });
+        return res.json({ status: "unsaved" });
+    } else {
+        // Save
+        await User.findByIdAndUpdate(userId, { $push: { savedBlogs: blogId } });
+        return res.json({ status: "saved" });
+    }
+});
+
 // View Single Blog
 router.get('/:id', async (req, res) => {
     try {
+        await Blog.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } });
         const blog = await Blog.findById(req.params.id).populate('createdBy');
         const comments = await Comment.find({ blogId: req.params.id }).populate('createdBy');
 

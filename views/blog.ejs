@@ -31,6 +31,82 @@
                 <!-- Main Content -->
                 <div class="col-lg-8 mx-auto blog-content">
 
+                    <div class="mt-3 mb-4 text-center text-md-start">
+                        <button id="likeBtn" class="btn btn-outline-danger rounded-pill px-4"
+                            onclick="toggleLike('<%= blog._id %>')">
+                            <% if (locals.user && blog.likes && blog.likes.includes(user._id)) { %>
+                                <i id="likeIcon" class="fa-solid fa-heart"></i>
+                                <% } else { %>
+                                    <i id="likeIcon" class="fa-regular fa-heart"></i>
+                                    <% } %>
+
+                                        <span class="ms-2 fw-bold" id="likeCount">
+                                            <%= blog.likes ? blog.likes.length : 0 %>
+                                        </span> Likes
+                        </button>
+
+                        <button id="saveBtn" class="btn btn-outline-info rounded-pill px-4 ms-2"
+                            onclick="toggleSave('<%= blog._id %>')">
+                            <% if (locals.user && user.savedBlogs && user.savedBlogs.includes(blog._id)) { %>
+                                <i id="saveIcon" class="fa-solid fa-bookmark"></i> <span id="saveText">Saved</span>
+                                <% } else { %>
+                                    <i id="saveIcon" class="fa-regular fa-bookmark"></i> <span id="saveText">Save</span>
+                                    <% } %>
+                        </button>
+                    </div>
+
+                    <script>
+                        async function toggleLike(blogId) {
+                            const btn = document.getElementById('likeBtn');
+                            const icon = document.getElementById('likeIcon');
+                            const countSpan = document.getElementById('likeCount');
+
+                            // 1. Call the Backend
+                            const response = await fetch(`/blog/like/${blogId}`);
+                            const data = await response.json();
+
+                            // 2. Handle Errors (Not logged in)
+                            if (response.status === 401) {
+                                alert(data.error); // Or redirect to login
+                                return;
+                            }
+
+                            // 3. Update the UI instantly
+                            let currentCount = parseInt(countSpan.innerText);
+
+                            if (data.status === 'liked') {
+                                icon.classList.remove('fa-regular');
+                                icon.classList.add('fa-solid'); // Fill the heart
+                                countSpan.innerText = currentCount + 1;
+                            } else {
+                                icon.classList.remove('fa-solid');
+                                icon.classList.add('fa-regular'); // Empty the heart
+                                countSpan.innerText = currentCount - 1;
+                            }
+                        }
+
+                        async function toggleSave(blogId) {
+                            const btn = document.getElementById('saveBtn');
+                            const icon = document.getElementById('saveIcon');
+                            const text = document.getElementById('saveText');
+
+                            const response = await fetch(`/blog/save/${blogId}`);
+                            const data = await response.json();
+
+                            if (response.status === 401) return alert("Please login to save");
+
+                            if (data.status === 'saved') {
+                                icon.classList.remove('fa-regular');
+                                icon.classList.add('fa-solid');
+                                text.innerText = "Saved";
+                            } else {
+                                icon.classList.remove('fa-solid');
+                                icon.classList.add('fa-regular');
+                                text.innerText = "Save";
+                            }
+                        }
+                    </script>
+
                     <div class="blog-body mb-5">
                         <%- blog.body %>
                     </div>
@@ -105,13 +181,20 @@
                         <!-- Author Card -->
                         <div class="card mb-4" style="background: var(--card-bg);">
                             <div class="card-body author-card">
-                                <img src="<%= (blog.createdBy && blog.createdBy.profileImageURL) ? blog.createdBy.profileImageURL : '/images/default.jpeg' %>"
-                                    alt="Author" class="author-large-img">
-                                <h5 class="card-title mb-1">
-                                    <%= blog.createdBy ? blog.createdBy.fullName : 'Unknown' %>
-                                </h5>
-                                <p class="text-muted small mb-3">Author</p>
-                                <!-- Placeholder bio or extra info could go here -->
+                                <% if (blog.createdBy) { %>
+                                    <a href="/user/u/<%= blog.createdBy._id %>" class="text-decoration-none">
+                                        <img src="<%= blog.createdBy.profileImageURL || '/images/default.jpeg' %>"
+                                            alt="Author" class="author-large-img">
+                                        <h5 class="card-title mb-1 text-white">
+                                            <%= blog.createdBy.fullName %>
+                                        </h5>
+                                    </a>
+                                    <% } else { %>
+                                        <img src="/images/default.jpeg" alt="Author" class="author-large-img">
+                                        <h5 class="card-title mb-1">Unknown</h5>
+                                        <% } %>
+                                            <p class="text-muted small mb-3">Author</p>
+                                            <!-- Placeholder bio or extra info could go here -->
                             </div>
                         </div>
 
@@ -140,7 +223,8 @@
             </div>
         </div>
 
-        <%- include('./partials/scripts') %>
+        <%- include('./partials/footer') %>
+            <%- include('./partials/scripts') %>
 </body>
 
 </html>

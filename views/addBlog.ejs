@@ -49,19 +49,20 @@
                 </div>
             </div>
         </div>
-        <%- include('./partials/scripts') %>
-            <script>
-                function previewFile() {
-                    const fileInput = document.getElementById('fileInput');
-                    const fileNameDisplay = document.getElementById('fileName');
-                    if (fileInput.files.length > 0) {
-                        fileNameDisplay.innerText = "Selected: " + fileInput.files[0].name;
+        <%- include('./partials/footer') %>
+            <%- include('./partials/scripts') %>
+                <script>
+                    function previewFile() {
+                        const fileInput = document.getElementById('fileInput');
+                        const fileNameDisplay = document.getElementById('fileName');
+                        if (fileInput.files.length > 0) {
+                            fileNameDisplay.innerText = "Selected: " + fileInput.files[0].name;
+                        }
                     }
-                }
-            </script>
-            <script>
-                const easyMDE = new EasyMDE({ element: document.getElementById('body') });
-            </script>
+                </script>
+                <script>
+                    const easyMDE = new EasyMDE({ element: document.getElementById('body') });
+                </script>
 </body>
 
 </html>

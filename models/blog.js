@@ -1,4 +1,4 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 const blogSchema = new Schema({
     title: {
@@ -25,7 +25,18 @@ const blogSchema = new Schema({
             ref: 'Comment',
         }
     ],
-}, { timestamps: true
+    likes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "user",
+        },
+    ],
+    views: {
+        type: Number,
+        default: 0,
+    },
+}, {
+    timestamps: true
 });
 
 const Blog = model('Blog', blogSchema);
