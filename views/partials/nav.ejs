@@ -191,68 +191,94 @@
   [data-theme="light"] .search-input-lg {
     color: #000;
   }
+
+  [data-theme="light"] .search-input-lg {
+    color: #000;
+  }
+
+  .navbar-toggler {
+    display: none;
+    /* Hidden on desktop */
+    background: transparent;
+    border: none;
+    padding: 10px;
+    z-index: 1001;
+  }
 </style>
 
 <nav class="custom-nav d-flex align-items-center">
   <div class="container d-flex justify-content-between align-items-center">
 
-    <a class="navbar-brand fw-bold text-light" href="/" style="font-family: 'Cinzel', serif; letter-spacing: 1px;">THE AKASHIC RECORDS</a>
+    <a class="navbar-brand fw-bold text-light" href="/" style="font-family: 'Cinzel', serif; letter-spacing: 1px;">THE
+      AKASHIC RECORDS</a>
 
-    <div class="d-flex align-items-center gap-3">
+    <button class="navbar-toggler" type="button" onclick="toggleNavbar()" aria-label="Toggle navigation">
+      <i class="fa-solid fa-bars text-light fa-lg"></i>
+    </button>
 
-      <button class="nav-icon-btn" onclick="toggleSearch()" title="Search">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
+    <div class="d-flex align-items-center gap-3" id="navbarContent">
 
-      <a href="/" class="nav-icon-btn" title="Home">
-        <i class="fa-solid fa-house"></i>
-      </a>
+      <!-- Row 1: Icons & Profile -->
+      <div class="nav-group-icons d-flex align-items-center gap-3">
+        <button class="nav-icon-btn" onclick="toggleSearch()" title="Search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
 
-      <% if (locals.user) { %>
-        <a href="/blog/add-new" class="btn-write">
-          <i class="fa-regular fa-pen-to-square"></i> <span>Write</span>
+        <a href="/" class="nav-icon-btn home-icon" title="Home">
+          <i class="fa-solid fa-house"></i>
         </a>
-        <% } %>
 
-          <button class="theme-toggle" id="theme-toggle" title="Toggles light & dark" aria-label="auto"
-            aria-live="polite">
-            <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
-              <mask class="moon" id="moon-mask">
-                <rect x="0" y="0" width="100%" height="100%" fill="white" />
-                <circle cx="24" cy="10" r="6" fill="black" />
-              </mask>
-              <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
-              <g class="sun-beams" stroke="currentColor">
-                <line x1="12" y1="1" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <line x1="1" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23" y2="12" />
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-              </g>
-            </svg>
-          </button>
+        <% if (locals.user) { %>
+          <a href="/blog/add-new" class="btn-write">
+            <i class="fa-regular fa-pen-to-square"></i> <span>Write</span>
+          </a>
+          <% } %>
 
-          <% if (locals.user) { %>
-            <div class="dropdown">
-              <button class="btn nav-icon-btn dropdown-toggle border-0" type="button" data-bs-toggle="dropdown">
-                <img src="<%= user.profileImageURL %>" class="rounded-circle border border-secondary"
-                  style="width: 30px; height: 30px;">
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end bg-dark border-secondary">
-                <li><a class="dropdown-item text-light" href="/user/profile">Profile</a></li>
-                <li>
-                  <hr class="dropdown-divider bg-secondary">
-                </li>
-                <li><a class="dropdown-item text-danger" href="/user/logout">Logout</a></li>
-              </ul>
-            </div>
-            <% } else { %>
-              <a href="/user/signin" class="btn btn-sm btn-outline-light rounded-pill px-3">Sign In</a>
-              <a href="/user/signup" class="btn btn-sm btn-info rounded-pill px-3 fw-bold">Get Started</a>
+            <button class="theme-toggle" id="theme-toggle" title="Toggles light & dark" aria-label="auto"
+              aria-live="polite">
+              <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                <mask class="moon" id="moon-mask">
+                  <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                  <circle cx="24" cy="10" r="6" fill="black" />
+                </mask>
+                <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
+                <g class="sun-beams" stroke="currentColor">
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </g>
+              </svg>
+            </button>
+
+            <% if (locals.user) { %>
+              <div class="dropdown">
+                <button class="btn nav-icon-btn dropdown-toggle border-0" type="button" data-bs-toggle="dropdown">
+                  <img src="<%= user.profileImageURL %>" class="rounded-circle border border-secondary"
+                    style="width: 30px; height: 30px;">
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end bg-dark border-secondary">
+                  <li><a class="dropdown-item text-light" href="/user/profile">Profile</a></li>
+                  <li>
+                    <hr class="dropdown-divider bg-secondary">
+                  </li>
+                  <li><a class="dropdown-item text-danger" href="/user/logout">Logout</a></li>
+                </ul>
+              </div>
               <% } %>
+      </div>
+
+      <!-- Row 2: Auth Buttons (Only if not logged in) -->
+      <% if (!locals.user) { %>
+        <div class="nav-group-auth d-flex align-items-center gap-2">
+          <a href="/user/signin" class="btn btn-sm btn-outline-light rounded-pill px-3">Sign In</a>
+          <a href="/user/signup" class="btn btn-sm btn-info rounded-pill px-3 fw-bold">Get Started</a>
+        </div>
+        <% } %>
 
     </div>
   </div>
@@ -276,6 +302,13 @@
   function toggleSearch() {
     const panel = document.getElementById('searchPanel');
     const input = document.getElementById('searchInput');
+    const navbarContent = document.getElementById('navbarContent'); // Get navbar content
+
+    // Close navbar if open so search panel is visible
+    if (navbarContent.classList.contains('show')) {
+      navbarContent.classList.remove('show');
+    }
+
     panel.classList.toggle('open');
 
     if (panel.classList.contains('open')) {
@@ -325,4 +358,13 @@
     theme.value = isDark ? 'dark' : 'light'
     setPreference()
   })
+</script>
+
+<script>
+  function toggleNavbar() {
+    const content = document.getElementById('navbarContent');
+    content.classList.toggle('show');
+
+    // Optional: Add slide animation height if desired, or stick to CSS display/opacity
+  }
 </script>
