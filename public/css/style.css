@@ -355,7 +355,8 @@ a:hover {
 
 /* Split Screen Container */
 /* Signup Specific Background */
-.signup-bg {
+/* Signup Specific Background (Target pseudo-element) */
+.signup-bg::before {
   background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452879/-Buddha_ojlarp.jpg') !important;
 }
 
@@ -744,14 +745,32 @@ a:hover {
 
 /* Split Screen Container */
 /* Split Screen Container */
+/* Split Screen Container */
 .split-screen {
   display: flex;
   height: 100vh;
   width: 100%;
-  /* Move the background image to the parent container so it's behind everything */
+  position: relative;
+  overflow: hidden;
+}
+
+.split-screen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* Default Background (Signin) */
   background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452965/defaultBlog_uplqdu.png');
   background-size: cover;
   background-position: center;
+  z-index: -1;
+
+  /* THE REQUESTED FILTER */
+  filter: grayscale(100%) sepia(100%) hue-rotate(170deg) saturate(300%) contrast(1.2);
+  opacity: 0.8;
 }
 
 /* 2. Make the left panel transparent and blurry */
@@ -1007,34 +1026,43 @@ body {
   background-size: 50px 50px;
   /* Controls the size of the grid squares */
 }
+
 /* 1. For Blog Cards */
-.card-img-top, .profile-avatar {
-    background-color: #0f172a; /* Deep Navy placeholder */
-    position: relative;
+.card-img-top,
+.profile-avatar {
+  background-color: #0f172a;
+  /* Deep Navy placeholder */
+  position: relative;
 }
 
 /* 2. For the Body Background */
 body {
-    background-color: #050505; /* Ensure the void is black, not white, before image loads */
+  background-color: #050505;
+  /* Ensure the void is black, not white, before image loads */
 }
 
 /* 3. Smooth Fade In (Optional Polish) */
 img {
-    animation: fade-in 0.5s ease-in;
+  animation: fade-in 0.5s ease-in;
 }
 
 @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .login-image-container img {
-    /* 1. Remove all color (Grayscale) */
-    /* 2. Add Sepia (makes it brown/monochrome) */
-    /* 3. Rotate Hue to Blue/Cyan (approx 170deg) */
-    /* 4. Boost Saturation to make it "Electric" */
-    filter: grayscale(100%) sepia(100%) hue-rotate(170deg) saturate(300%) contrast(1.2);
-    
-    /* Optional: Fade it out slightly so it feels like it's in the background */
-    opacity: 0.8; 
+  /* 1. Remove all color (Grayscale) */
+  /* 2. Add Sepia (makes it brown/monochrome) */
+  /* 3. Rotate Hue to Blue/Cyan (approx 170deg) */
+  /* 4. Boost Saturation to make it "Electric" */
+  filter: grayscale(100%) sepia(100%) hue-rotate(170deg) saturate(300%) contrast(1.2);
+
+  /* Optional: Fade it out slightly so it feels like it's in the background */
+  opacity: 0.8;
 }

@@ -4,11 +4,27 @@
         <style>
             body {
                 background-color: #050505;
+                color: #fff;
+                position: relative;
+                min-height: 100vh;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
                 background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452879/-Buddha_ojlarp.jpg');
                 background-size: cover;
                 background-position: center;
-                background-attachment: fixed;
-                color: #fff;
+                z-index: -1;
+                pointer-events: none;
+
+                /* CYAN FILTER */
+                filter: grayscale(100%) sepia(100%) hue-rotate(170deg) saturate(300%) contrast(1.2);
+                opacity: 0.8;
             }
 
             .settings-card {
