@@ -1199,6 +1199,8 @@ img {
     /* Limit to 2 lines so it doesn't cover the whole image */
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
+    /* Standard property */
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
