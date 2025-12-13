@@ -119,17 +119,17 @@
             <div class="row align-items-center">
 
                 <div class="col-lg-auto text-center text-lg-start mb-4 mb-lg-0">
-                    <img src="<%= user.profileImageURL %>" class="profile-avatar">
+                    <img src="<%= profileUser.profileImageURL %>" class="profile-avatar">
                 </div>
 
                 <div class="col-lg ps-lg-5 text-center text-lg-start">
                     <h1 class="fw-bold mb-2">
-                        <%= user.fullName %> <span class="badge-pro">
-                                <%= user.role %>
+                        <%= profileUser.fullName %> <span class="badge-pro">
+                                <%= profileUser.role %>
                             </span>
                     </h1>
                     <p class="text-secondary mb-4 fs-5">
-                        <%= user.email %>
+                        <%= profileUser.email %>
                     </p>
 
                     <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
@@ -141,10 +141,10 @@
                                 Edit Profile
                             </a>
                             <% } else { %>
-                                <% const isFollowing=user.followers.map(id=>
+                                <% const isFollowing=profileUser.followers.map(id=>
                                     id.toString()).includes(currentUser?._id.toString()); %>
 
-                                    <button id="followBtn" onclick="toggleFollow('<%= user._id %>')"
+                                    <button id="followBtn" onclick="toggleFollow('<%= profileUser._id %>')"
                                         class="btn <%= isFollowing ? 'btn-secondary' : 'btn-info' %> rounded-pill px-4 fw-bold">
                                         <%= isFollowing ? 'Unfollow' : 'Follow' %>
                                     </button>
@@ -162,13 +162,13 @@
                         </div>
                         <div class="text-center stat-box">
                             <h2 id="followerCount">
-                                <%= user.followers.length %>
+                                <%= profileUser.followers.length %>
                             </h2>
                             <p>Followers</p>
                         </div>
                         <div class="text-center stat-box">
                             <h2>
-                                <%= user.following.length %>
+                                <%= profileUser.following.length %>
                             </h2>
                             <p>Following</p>
                         </div>
@@ -203,11 +203,11 @@
                     <div class="col-md-8 text-center">
                         <h2 class="fw-bold mb-4" style="font-family: 'Cinzel', serif;">About The Author</h2>
                         <p class="fs-4 text-light" style="line-height: 1.8;">
-                            "<%= user.bio %>"
+                            "<%= profileUser.bio %>"
                         </p>
                         <hr class="border-secondary my-5 w-50 mx-auto">
                         <p class="text-secondary">
-                            Joined on <%= user.createdAt.toLocaleDateString() %>
+                            Joined on <%= profileUser.createdAt.toLocaleDateString() %>
                         </p>
                     </div>
                 </div>
@@ -244,12 +244,14 @@
                                                 <div class="mt-auto d-flex align-items-center gap-2">
                                                     <a href="/blog/<%= blog._id %>"
                                                         class="btn btn-sm btn-light flex-grow-1 rounded-pill fw-bold">Read</a>
-                                                    <a href="/blog/edit/<%= blog._id %>"
-                                                        class="btn btn-circle btn-dark border border-secondary text-warning"><i
-                                                            class="fa-solid fa-pen"></i></a>
-                                                    <a href="/blog/delete/<%= blog._id %>"
-                                                        class="btn btn-circle btn-dark border border-secondary text-danger"><i
-                                                            class="fa-solid fa-trash"></i></a>
+                                                    <% if (locals.isOwner) { %>
+                                                        <a href="/blog/edit/<%= blog._id %>"
+                                                            class="btn btn-circle btn-dark border border-secondary text-warning"><i
+                                                                class="fa-solid fa-pen"></i></a>
+                                                        <a href="/blog/delete/<%= blog._id %>"
+                                                            class="btn btn-circle btn-dark border border-secondary text-danger"><i
+                                                                class="fa-solid fa-trash"></i></a>
+                                                        <% } %>
                                                 </div>
                                             </div>
                                         </div>

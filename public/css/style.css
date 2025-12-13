@@ -1027,3 +1027,14 @@ img {
     from { opacity: 0; }
     to { opacity: 1; }
 }
+
+.login-image-container img {
+    /* 1. Remove all color (Grayscale) */
+    /* 2. Add Sepia (makes it brown/monochrome) */
+    /* 3. Rotate Hue to Blue/Cyan (approx 170deg) */
+    /* 4. Boost Saturation to make it "Electric" */
+    filter: grayscale(100%) sepia(100%) hue-rotate(170deg) saturate(300%) contrast(1.2);
+    
+    /* Optional: Fade it out slightly so it feels like it's in the background */
+    opacity: 0.8; 
+}

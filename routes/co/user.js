@@ -58,7 +58,7 @@ router.get("/profile", async (req, res) => {
     const totalLikes = myWork.reduce((acc, blog) => acc + (blog.likes ? blog.likes.length : 0), 0);
 
     res.render("profile", {
-        user: realUser,
+        profileUser: realUser,
         currentUser: req.user,
         blogs: blogsToRender,
         totalLikes: totalLikes,
@@ -129,14 +129,14 @@ router.get("/u/:id", async (req, res) => {
         const totalLikes = blogs.reduce((acc, blog) => acc + (blog.likes ? blog.likes.length : 0), 0);
 
         res.render("profile", {
-            user: user,             // The person we are looking at
+            profileUser: user,      // The person we are looking at (Renamed from 'user' to avoid conflict)
             currentUser: req.user,  // ME (The one logged in)
             blogs: blogs,
             totalLikes: totalLikes,
             isOwner: req.user && req.user._id.toString() === userId // Are we looking at ourselves?
         });
     } catch (err) {
-        console.log(err);
+        console.log("Profile Error:", err);
         res.redirect('/');
     }
 });
