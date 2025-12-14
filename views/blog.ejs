@@ -15,8 +15,9 @@
 
         <div class="container-fluid p-0 mb-4 position-relative">
             <div class="blog-banner position-relative overflow-hidden">
-                <img src="<%- blog.coverImageURL %>" alt="Cover" class="position-absolute w-100 h-100"
-                    style="object-fit: cover; z-index: 0; top: 0; left: 0;">
+                <img src="<%= blog.coverImageURL || '/images/defaultBlog.png' %>" alt="<%= blog.title %> Cover"
+                    class="position-absolute w-100 h-100" style="object-fit: cover; z-index: 0; top: 0; left: 0;"
+                    onerror="this.onerror=null;this.src='/images/defaultBlog.png';">
 
                 <div class="banner-overlay position-relative" style="z-index: 1;">
                     <div
