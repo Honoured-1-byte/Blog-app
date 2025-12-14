@@ -15,18 +15,23 @@
 
         <div class="container-fluid p-0 mb-4 position-relative">
             <div class="blog-banner position-relative overflow-hidden">
-                <img src="<%= blog.coverImageURL || '/images/defaultBlog.png' %>" alt="<%= blog.title %> Cover"
-                    class="position-absolute w-100 h-100" style="object-fit: cover; z-index: 0; top: 0; left: 0;"
-                    onerror="this.onerror=null;this.src='/images/defaultBlog.png';">
+                <% const defaultImages={ "693dc46dd348ddc001c50af9" : "/images/default_ashvashira.jpg"
+                    , "693dc57bd348ddc001c50b02" : "/images/default_yantrik.jpg" , "693dc5fcd348ddc001c50b0f"
+                    : "/images/default_otaku.jpg" }; let fallbackImage='/images/defaultBlog.png' ; const
+                    creatorId=blog.createdBy ? (blog.createdBy._id || blog.createdBy).toString() : null; if (creatorId
+                    && defaultImages[creatorId]) { fallbackImage=defaultImages[creatorId]; } %>
+                    <img src="<%= blog.coverImageURL || fallbackImage %>" alt="<%= blog.title %> Cover"
+                        class="position-absolute w-100 h-100" style="object-fit: cover; z-index: 0; top: 0; left: 0;"
+                        onerror="this.onerror=null;this.src='<%= fallbackImage %>';">
 
-                <div class="banner-overlay position-relative" style="z-index: 1;">
-                    <div
-                        class="container h-100 d-flex flex-column justify-content-center align-items-center text-center">
-                        <h1 class="display-3 fw-bold text-white text-shadow">
-                            <%= blog.title %>
-                        </h1>
+                    <div class="banner-overlay position-relative" style="z-index: 1;">
+                        <div
+                            class="container h-100 d-flex flex-column justify-content-center align-items-center text-center">
+                            <h1 class="display-3 fw-bold text-white text-shadow">
+                                <%= blog.title %>
+                            </h1>
+                        </div>
                     </div>
-                </div>
             </div>
         </div>
 
