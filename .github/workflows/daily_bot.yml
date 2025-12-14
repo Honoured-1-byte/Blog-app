@@ -20,8 +20,9 @@ jobs:
       with:
         node-version: '18'
 
+      
     - name: Install dependencies
-      run: npm install
+      run: npm install --legacy-peer-deps
 
     - name: Run Bot Writer
       run: node bot_writer.js

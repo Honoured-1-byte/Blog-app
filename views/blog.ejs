@@ -14,8 +14,11 @@
 
 
         <div class="container-fluid p-0 mb-4 position-relative">
-            <div class="blog-banner" style="background-image: url('<%= blog.coverImageURL %>');">
-                <div class="banner-overlay">
+            <div class="blog-banner position-relative overflow-hidden">
+                <img src="<%- blog.coverImageURL %>" alt="Cover" class="position-absolute w-100 h-100"
+                    style="object-fit: cover; z-index: 0; top: 0; left: 0;">
+
+                <div class="banner-overlay position-relative" style="z-index: 1;">
                     <div
                         class="container h-100 d-flex flex-column justify-content-center align-items-center text-center">
                         <h1 class="display-3 fw-bold text-white text-shadow">
