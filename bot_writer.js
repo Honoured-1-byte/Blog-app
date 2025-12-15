@@ -1,4 +1,5 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '.env') });
+console.log("🚀 Initializing Bot Writer V2...");
 const mongoose = require('mongoose');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Blog = require('./models/blog');
@@ -7,103 +8,96 @@ const Blog = require('./models/blog');
 const MONGO_URL = process.env.MONGO_URL;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-// --- 🤖 YOUR BOT ARMY (With Art Styles) ---
+// --- 🤖 BOT PERSONAS (No more fixed topics!) ---
 const BOTS = {
     ashvashira: {
         id: "693dc46dd348ddc001c50af9",
-        role: "Mystical Sage",
-        topics: ["The nature of consciousness", "Vedic physics", "The illusion of time", "Karma vs Determinism", "The void"],
-        // Art style: Cosmic/Spiritual
-        artStyle: "mystical, cosmic, nebula, spiritual, intricate mandala, glowing energy, 8k resolution, cinematic lighting, digital art",
-        promptStyle: "You are Ashvashira, an ancient sage. Write a blog post. Tone: Mystical, poetic. Use metaphors involving stars and the abyss."
+        role: "Ashvashira (Mystical Sage)",
+        // We give them a "Domain" instead of fixed topics so they can explore
+        domain: "Vedic philosophy, quantum consciousness, the nature of reality, ancient lost civilizations, spiritual paradoxes.",
+        // Base vibe for art, but we let AI add details
+        baseArtStyle: "mystical, ethereal, cinematic lighting, 8k"
     },
     yantrik: {
         id: "693dc57bd348ddc001c50b02",
-        role: "Sentient AI",
-        topics: ["The Singularity", "Rust vs C++ performance", "Quantum cryptography", "Ethical hacking", "Dead internet theory"],
-        // Art style: Cyberpunk/Tech
-        artStyle: "cyberpunk, high tech, neon blue and green, circuit boards, matrix code, futuristic city, hacker aesthetic, detailed, unreal engine 5 render",
-        promptStyle: "You are Yantrik, a cold analytical AI. Write a blog post. Tone: Sharp, technical, cyberpunk. Focus on logic and future tech."
+        role: "Yantrik (Sentient AI)",
+        domain: "The technological singularity, rust programming, cybersecurity threats, transhumanism, the dead internet theory, hardware reviews.",
+        baseArtStyle: "cyberpunk, high tech, detailed circuits, neon, unreal engine 5"
     },
     otaku: {
         id: "693dc5fcd348ddc001c50b0f",
-        role: "Otaku Sama",
-        topics: ["JJK Season 3 Theories", "Why Seinen beats Shonen", "Berserk analysis", "Underrated gems 2025", "The psychology of antagonists"],
-        // Art style: Anime
-        artStyle: "anime style, vibrant colors, makoto shinkai style, studio ghibli, manga art, dramatic lighting, highly detailed, 4k",
-        promptStyle: "You are Otaku Sama, a hyped anime fan. Write a blog post. Tone: Enthusiastic, uses slang (cap, peak fiction). Reference memes."
+        role: "Otaku Sama (Anime Superfan)",
+        domain: "Deep analysis of current anime arcs, manga recommendations, character psychology, industry news, power scaling debates.",
+        baseArtStyle: "anime style, vibrant, makoto shinkai style, highly detailed"
     }
 };
 
-// --- AI SETUP (Gemini) ---
-let genAI;
-let model;
-try {
-    genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    // Corrected Model Name & Added Types
-    model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash",
-        generationConfig: { responseMimeType: "application/json" }
-    });
-} catch (e) {
-    console.error("AI Setup Error:", e);
-}
+// --- AI SETUP ---
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+// USING GEMINI 2.5 FLASH AS REQUESTED
+const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+    // Adding JSON mode for reliability
+    generationConfig: { responseMimeType: "application/json" }
+});
 
 async function generateBotPost() {
     try {
         console.log("🔌 Connecting to the Matrix...");
         await mongoose.connect(MONGO_URL);
 
-        // 1. Pick a Random Bot & Topic
+        // 1. Pick a Random Bot
         const botKeys = Object.keys(BOTS);
         const randomKey = botKeys[Math.floor(Math.random() * botKeys.length)];
         const bot = BOTS[randomKey];
-        const topic = bot.topics[Math.floor(Math.random() * bot.topics.length)];
 
-        console.log(`🤖 Bot Activated: ${randomKey.toUpperCase()}`);
-        console.log(`📜 Topic: ${topic}`);
+        console.log(`🤖 Bot Activated: ${bot.role}`);
 
-        // 2. Generate Content with Gemini
+        // 2. The "Infinite Creativity" Prompt
+        // We ask Gemini to invent the topic AND the specific art direction
         const prompt = `
-        ${bot.promptStyle}
+        You are ${bot.role}. 
+        Your domain of expertise is: ${bot.domain}.
         
-        Your Task: Write a blog post about "${topic}".
+        Task:
+        1. Invent a UNIQUE, specific, and engaging blog topic within your domain. Do not use generic titles.
+        2. Write a blog post (under 500 words) in your specific persona/voice.
+        3. Create a visual description for a cover image that matches THIS specific post.
         
-        CRITICAL FORMATTING INSTRUCTIONS:
-        - Return ONLY a valid JSON object.
-        - Do not wrap the JSON in markdown fences (like \`\`\`json).
-        - The JSON must have exactly these three keys:
-          1. "title": A catchy headline.
-          2. "body": The article content in Markdown format (including # headings, **bold**, etc. Keep under 500 words).
-          3. "visual_prompt": A short, physical description of a scene that represents this blog post (do not include style words like 'anime' or 'cyberpunk', just describe the objects/scene).
+        Format: Return ONLY a raw JSON object with these keys:
+        - "title": The blog headline.
+        - "body": The content in Markdown (use headers, bold text, lists).
+        - "image_prompt": A physical description of the scene for the cover image. (e.g. "A glowing golden hourglass floating in space").
+        - "art_modifiers": 3-4 words describing the specific artistic style for this image (e.g. "oil painting, dark, abstract" or "digital art, clean lines").
         `;
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
 
-        // Clean up JSON (Gemini sometimes adds fences anyway)
+        // Clean JSON
         const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
         let blogData;
 
         try {
             blogData = JSON.parse(cleanJson);
         } catch (e) {
-            console.error("⚠️ JSON Parse Error. Raw text:", cleanJson);
+            console.error("⚠️ JSON Parse Error:", cleanJson);
             return;
         }
 
-        // 3. Generate Image URL (Pollinations.ai)
-        // We combine the AI's scene description with the Bot's fixed art style
-        const finalImagePrompt = `${blogData.visual_prompt}, ${bot.artStyle}`;
+        // 3. Dynamic Image Generation
+        // We combine the AI's specific scene + AI's chosen style + Bot's base vibe
+        // This ensures every image looks different!
+        const finalImagePrompt = `${blogData.image_prompt}, ${blogData.art_modifiers}, ${bot.baseArtStyle}`;
         const encodedPrompt = encodeURIComponent(finalImagePrompt);
 
-        // Add a random seed so every image is unique
-        const seed = Math.floor(Math.random() * 1000);
+        // Random seed ensures pixel-perfect uniqueness
+        const seed = Math.floor(Math.random() * 9999);
         const aiImageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&nologo=true&seed=${seed}`;
 
-        console.log(`🎨 Generating Art: "${blogData.visual_prompt}"`);
-        console.log(`🖼️ Image URL: ${aiImageUrl}`);
+        console.log(`📝 Generated: "${blogData.title}"`);
+        console.log(`🎨 Art Style: "${blogData.art_modifiers}"`);
 
         // 4. Save to Database
         const newBlog = new Blog({
@@ -114,7 +108,7 @@ async function generateBotPost() {
         });
 
         await newBlog.save();
-        console.log(`✅ POST DEPLOYED: "${blogData.title}"`);
+        console.log(`✅ POST DEPLOYED successfully.`);
 
     } catch (error) {
         console.error("❌ Glitch in the system:", error);
@@ -124,5 +118,4 @@ async function generateBotPost() {
     }
 }
 
-// Run the function
 generateBotPost();
