@@ -1008,6 +1008,10 @@ html.light-mode .blog-body img {
   filter: invert(1) hue-rotate(180deg) !important;
 }
 
+html.light-mode .blog-banner img {
+  filter: none !important;
+}
+
 /* Fix brightness for carousel images in light mode */
 html.light-mode #heroCarousel {
   /* Un-invert the container so it looks like Dark Mode (Original) */
