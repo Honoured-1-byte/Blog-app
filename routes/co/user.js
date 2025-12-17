@@ -6,22 +6,21 @@ const router = Router();
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const { uploadToImgCDN } = require('../../services/imgcdn');
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const uploadDir = path.resolve('./public/images/profiles');
-        try {
-            if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-        } catch (e) {
-            return cb(e);
-        }
-        cb(null, uploadDir);
-    },
-    filename: function (req, file, cb) {
-        const fileName = `${Date.now()}-${file.originalname}`;
-        cb(null, fileName);
-    },
-});
+// Helper for local fallback
+function saveBufferToLocal(buffer, originalname) {
+    const uploadDir = path.resolve('./public/images/profiles');
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    const fileName = `${Date.now()}-${originalname}`;
+    const filePath = path.join(uploadDir, fileName);
+    fs.writeFileSync(filePath, buffer);
+    return `/images/profiles/${fileName}`;
+}
+
+const storage = multer.memoryStorage();
 
 const upload = multer({ storage: storage });
 
@@ -98,7 +97,17 @@ router.post('/signup', upload.single('profileImage'), async (req, res) => {
 
     let profileImageURL = '/images/default.jpeg';
     if (req.file) {
-        profileImageURL = `/images/profiles/${req.file.filename}`;
+        try {
+            profileImageURL = await uploadToImgCDN(req.file.buffer, req.file.originalname);
+        } catch (err) {
+            console.error("Failed to upload to IMGCDN:", err);
+            // Fallback to local
+            try {
+                profileImageURL = saveBufferToLocal(req.file.buffer, req.file.originalname);
+            } catch (localErr) {
+                console.error("Local fallback also failed:", localErr);
+            }
+        }
     }
 
     try {
@@ -160,7 +169,16 @@ router.post("/edit-profile", upload.single("profileImage"), async (req, res) => 
 
         // If a new image was uploaded, update the URL
         if (req.file) {
-            updateData.profileImageURL = `/images/profiles/${req.file.filename}`;
+            try {
+                updateData.profileImageURL = await uploadToImgCDN(req.file.buffer, req.file.originalname);
+            } catch (err) {
+                console.error("Failed to upload to IMGCDN during edit:", err);
+                try {
+                    updateData.profileImageURL = saveBufferToLocal(req.file.buffer, req.file.originalname);
+                } catch (localErr) {
+                    return res.render("editProfile", { user: req.user, error: "Image upload failed" });
+                }
+            }
         }
 
         // Update the database

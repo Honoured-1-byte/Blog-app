@@ -172,8 +172,7 @@
                                                             <div class="mb-2">
                                                                 <span
                                                                     class="badge bg-dark border border-secondary text-info">
-                                                                    <%= Math.ceil((blog.body ? blog.body.length : 0) /
-                                                                        200) %> min read
+                                                                    <%= Math.ceil((blog.body ? blog.body.split(' ').length : 0) / 200) %> min read
                                                                 </span>
                                                             </div>
                                                             <h5 class="card-title">
@@ -190,25 +189,26 @@
                                     </div>
 
                                     <script>
-                                        document.addEventListener('DOMContentLoaded', function () {
-                                            const loadMoreBtn = document.getElementById('loadMoreBtn');
+                                        document.addEventListener(' DOMContentLoaded', function () {
+                                            const
+                                            loadMoreBtn = document.getElementById('loadMoreBtn');
                                             if (loadMoreBtn) {
-                                                loadMoreBtn.addEventListener('click', function () {
-                                                    const hiddenCards = document.querySelectorAll('#talkTownGrid .hidden-card');
-                                                    // Show next 4
-                                                    for (let i = 0; i < 4 && i < hiddenCards.length; i++) {
-                                                        hiddenCards[i].classList.remove('hidden-card');
-                                                    }
-                                                    // Hide button if no more hidden cards
-                                                    if (document.querySelectorAll('#talkTownGrid .hidden-card').length === 0) {
-                                                        loadMoreBtn.style.display = 'none';
-                                                    }
-                                                });
+                                                loadMoreBtn.addEventListener('click', function
+                                                    () {
+                                                        const
+                                                        hiddenCards = document.querySelectorAll('#talkTownGrid
+                                                            .hidden - card'); // Show next 4 for (let i=0; i <
+                                                                        4 && i < hiddenCards.length; i++) {
+                                                    hiddenCards[i].classList.remove('hidden-card');
+                                                } // Hide button if no more hidden cards if
+                                                (document.querySelectorAll('#talkTownGrid
+                                                    .hidden - card').length===0) {
+                                                                        loadMoreBtn.style.display = 'none' ;
                                             }
-                                        });
+                                        }); } });
                                     </script>
-                                    <%- include('./partials/footer') %>
-                                        <%- include('./partials/scripts') %>
+                                                                        <%- include('./partials/footer') %>
+                                                                            <%- include('./partials/scripts') %>
 </body>
 
 </html>
