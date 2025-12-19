@@ -7,6 +7,7 @@ const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 const { uploadToImgCDN } = require('../../services/imgcdn');
+const { createTokenForUser } = require('../../services/authentication');
 
 // Helper for local fallback
 function saveBufferToLocal(buffer, originalname) {
@@ -118,7 +119,14 @@ router.post('/signup', upload.single('profileImage'), async (req, res) => {
             profileImageURL
         });
 
-        return res.redirect('/');
+        // 2. Fetch the user we just created (to get their ID)
+        const user = await User.findOne({ email });
+
+        // 3. Create the Token (Auto-Login)
+        const token = createTokenForUser(user);
+
+        // 4. Save the Cookie
+        return res.cookie("token", token).redirect("/");
     } catch (error) {
         console.error('Signup error:', error);
         return res.render('signup', { error: "Error creating account. Try again." });

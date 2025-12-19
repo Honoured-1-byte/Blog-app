@@ -258,8 +258,9 @@
             <% if (locals.user) { %>
               <div class="dropdown">
                 <button class="btn nav-icon-btn dropdown-toggle border-0" type="button" data-bs-toggle="dropdown">
-                  <img src="<%= user.profileImageURL %>" class="rounded-circle border border-secondary"
-                    style="width: 30px; height: 30px;">
+                  <img src="<%= user.profileImageURL ? user.profileImageURL : '/images/default_profile.jpeg' %>"
+                    class="rounded-circle border border-secondary" style="width: 30px; height: 30px;"
+                    onerror="this.onerror=null; this.src='/images/default_profile.jpeg';">
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end bg-dark border-secondary">
                   <li><a class="dropdown-item text-light" href="/user/profile">Profile</a></li>

@@ -192,8 +192,9 @@
                             <div class="card-body author-card">
                                 <% if (blog.createdBy) { %>
                                     <a href="/user/u/<%= blog.createdBy._id %>" class="text-decoration-none">
-                                        <img src="<%= blog.createdBy.profileImageURL || '/images/default.jpeg' %>"
-                                            alt="Author" class="author-large-img">
+                                        <img src="<%= (blog.createdBy && blog.createdBy.profileImageURL) ? blog.createdBy.profileImageURL : '/images/default_profile.jpeg' %>"
+                                            alt="Author" class="author-large-img"
+                                            onerror="this.onerror=null; this.src='/images/default_profile.jpeg';">
                                         <h5 class="card-title mb-1 text-white">
                                             <%= blog.createdBy.fullName %>
                                         </h5>
@@ -214,8 +215,9 @@
                                     <h5 class="card-title mb-3">Related Posts</h5>
                                     <% relatedBlogs.forEach(rb=> { %>
                                         <a href="/blog/<%= rb._id %>" class="related-blog-item">
-                                            <img src="<%= rb.coverImageURL.replace('/upload/', '/upload/f_jpg,q_auto,w_600/') || '/images/defaultBlog.png' %>"
-                                                class="related-blog-img" alt="<%= rb.title %>">
+                                            <img src="<%= (rb.coverImageURL && rb.coverImageURL.includes('/upload/')) ? rb.coverImageURL.replace('/upload/', '/upload/f_jpg,q_auto,w_600/') : rb.coverImageURL %>"
+                                                class="related-blog-img" alt="<%= rb.title %>"
+                                                onerror="fallbackBlogImage(this, '<%= (rb.createdBy && rb.createdBy._id) ? rb.createdBy._id : rb.createdBy %>')">
                                             <div>
                                                 <h6 class="mb-1 text-white text-truncate" style="max-width: 180px;">
                                                     <%= rb.title %>

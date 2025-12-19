@@ -40,3 +40,28 @@
         });
     }
 </script>
+
+<script>
+    // 1. Logic for BLOG COVERS
+    function fallbackBlogImage(img, authorId) {
+        img.onerror = null; // Prevent infinite loops
+
+        // The specific IDs of your 3 Bots
+        const botDefaults = {
+            "693dc46dd348ddc001c50af9": "/images/default_ashvashira.jpg", // Ashvashira
+            "693dc57bd348ddc001c50b02": "/images/default_yantrik.jpg",    // Yantrik
+            "693dc5fcd348ddc001c50b0f": "/images/default_otaku.jpg"       // Otaku
+        };
+
+        // If the author is a bot, use their special image. 
+        // If it's a human (or unknown), use the generic 'defaultBlog.png'
+        img.src = botDefaults[authorId] || "/images/defaultBlog.png";
+    }
+
+    // 2. Logic for PROFILE PICTURES
+    function fallbackProfileImage(img) {
+        img.onerror = null;
+        // Always use the generic silhouette for missing profile pics
+        img.src = "/images/default_profile.jpeg";
+    }
+</script>
