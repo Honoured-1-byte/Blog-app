@@ -30,8 +30,9 @@
                 <% blogs.forEach(blog=> { %>
                     <div class="col">
                         <div class="card h-100 bg-dark text-white border-secondary shadow-sm hover-card">
-                            <img src="<%= blog.coverImageURL.replace('/upload/', '/upload/f_auto,q_auto,w_600/') %>"
-                                class="card-img-top" style="height: 220px; object-fit: cover;">
+                            <img src="<%= (blog.coverImageURL && blog.coverImageURL.includes('/upload/')) ? blog.coverImageURL.replace('/upload/', '/upload/f_jpg,q_auto,w_600/') : blog.coverImageURL %>"
+                                class="card-img-top" style="height: 220px; object-fit: cover;" alt="<%= blog.title %>"
+                                onerror="fallbackBlogImage(this, '<%= (blog.createdBy && blog.createdBy._id) ? blog.createdBy._id : blog.createdBy %>')">
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <%= blog.title %>

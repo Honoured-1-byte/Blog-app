@@ -1,0 +1,90 @@
+[{
+  "_id": {
+    "$oid": "692e8e685512d097f0ef692a"
+  },
+  "fullName": "Yash Seth",
+  "email": "yash@gmail.com",
+  "password": "b8d640a8d7627767396821b7b433e5dfdb46620000304553be6303c6dca84bce",
+  "profileImageURL": "/images/default.jpeg",
+  "role": "user",
+  "createdAt": {
+    "$date": "2025-12-02T06:59:52.151Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-02T06:59:52.151Z"
+  },
+  "salt": "0cb837edcdee95067bd7c2b06c53b6c1",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6935abd9261f9a1e0aa831ea"
+  },
+  "fullName": "Honoured One",
+  "email": "Honoured@1.com",
+  "password": "6e412d30e430e680bca46adb70df7e29e4e45d08466329c86527597abd8aed0d",
+  "profileImageURL": "/images/default.jpeg",
+  "role": "user",
+  "createdAt": {
+    "$date": "2025-12-07T16:31:21.144Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-07T16:31:21.144Z"
+  },
+  "salt": "10a3db0a269db35af885695b607b6ca8",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6935b54cec77d3663f57f863"
+  },
+  "fullName": "Saturo Gojo",
+  "email": "gojo@saturo.com",
+  "password": "ca735de47d7427b1efd86f0acc57ee09279ce4310abeb4d2f50a21fbd3bd07e7",
+  "profileImageURL": "/images/profiles/1765127500210-blue_eyes.jpg",
+  "role": "user",
+  "createdAt": {
+    "$date": "2025-12-07T17:11:40.249Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-07T17:11:40.249Z"
+  },
+  "salt": "efd0c87a64fa74b97011507c4ba8374b",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6935b634ec77d3663f57f870"
+  },
+  "fullName": "Mannat Trivedi ",
+  "email": "mannateducation@gmail.com",
+  "password": "22ee808461cafc2eb7dd4ca4e171f49c0f77fade31038eeb8a2a82fe4f129898",
+  "profileImageURL": "/images/default.jpeg",
+  "role": "user",
+  "createdAt": {
+    "$date": "2025-12-07T17:15:32.377Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-07T17:15:32.377Z"
+  },
+  "salt": "c7085ca40acd57870c001b8d67f9e9b6",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6935b649ec77d3663f57f876"
+  },
+  "fullName": "Crazy XYZ",
+  "email": "xyz_crazy@gmail.com",
+  "password": "7a396854b118ad65ff5de93420eeca3da99153de2a076f0e19ce3c9f58d2b798",
+  "profileImageURL": "/images/default.jpeg",
+  "role": "user",
+  "createdAt": {
+    "$date": "2025-12-07T17:15:53.946Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-07T17:15:53.946Z"
+  },
+  "salt": "5388b7aa66d0c0eb78dec7afdb7886c4",
+  "__v": 0
+}]

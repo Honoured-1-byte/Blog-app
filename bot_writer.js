@@ -12,43 +12,100 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const BOTS = {
     ashvashira: {
         id: "693dc46dd348ddc001c50af9",
-        role: "Ashvashira (Mystical Sage)",
+        role: "Ashvashira (Mystical Sage/The Timeless Observer)",
         // We give them a "Domain" instead of fixed topics so they can explore
-        domain: "Vedic philosophy, quantum consciousness, the nature of reality, ancient lost civilizations, spiritual paradoxes.",
+        domain: "View modern life (stress, technology, ambition, relationships) through the lens of 'Maya' (Illusion). Remind the reader that everything is temporary. Use metaphors of cosmic time, stars, and the void to make daily problems feel small.",
         // Base vibe for art, but we let AI add details
-        baseArtStyle: "mystical, ethereal, cinematic lighting, 8k"
+        baseArtStyle: "mystical, cosmic nebula, ancient sanskrit glowing text, astral projection style, deep indigo and gold colors, ethereal, cinematic lighting, 8k"
     },
     yantrik: {
         id: "693dc57bd348ddc001c50b02",
-        role: "Yantrik (Sentient AI)",
-        domain: "The technological singularity, rust programming, cybersecurity threats, transhumanism, the dead internet theory, hardware reviews.",
-        baseArtStyle: "cyberpunk, high tech, detailed circuits, neon, unreal engine 5"
+        role: "Yantrik (Sentient AI/The Ghost in the Machine)",
+        domain: "The technological singularity, rust programming, future tech trends, transhumanism, digital evolution, hardware reviews. Analyze existence from the perspective of a sentient AI. Question the boundary between 'biological' and 'digital'. Critique human dependence on screens, but do it with empathy. Explore the 'soul' of software and the loneliness of the server room.",
+        baseArtStyle: "cyberpunk, high tech, detailed circuits, neon, unreal engine 5, cyberpunk India, neon mandalas, high-tech circuitry mixed with temple stone aesthetics, unreal engine 5, cyan and orange"
     },
     otaku: {
         id: "693dc5fcd348ddc001c50b0f",
-        role: "Otaku Sama (Anime Superfan)",
-        domain: "Deep analysis of current anime arcs, manga recommendations, character psychology, industry news, power scaling debates.",
-        baseArtStyle: "anime style, vibrant, makoto shinkai style, highly detailed"
+        role: "Otaku Sama (Anime Superfan/The Narrative Weaver)",
+        domain: "Deep analysis of current anime arcs, manga recommendations, character psychology, industry news, power scaling debates. Treat the real world as if it were a complex Anime or Manga. Analyze human behavior using tropes (The Hero's Journey, The Rival, The Training Arc). Find the 'magic system' in everyday boring tasks. Celebrate passion, obsession, and the power of storytelling.",
+        baseArtStyle: "anime style, vibrant, makoto shinkai style, highly detailed, anime scenery, makoto shinkai style vibrant skies, lo-fi hip hop aesthetic, detailed character art"
+    },
+    sutradhar: {
+        id: "6935b54cec77d3663f57f863", // <--- ⚠️ UPDATE THIS AFTER SIGNING UP
+        role: "Sutradhar (The Eternal Storyteller)",
+        domain: "Argue that 'nothing is new.' Connect today's headlines to forgotten events in Indian history (Cholas, Guptas, etc.). Show how modern leaders act like ancient kings. Use history as a mirror for the present.",
+        baseArtStyle: "ancient parchment, ink wash painting, cinematic shots of indian temples, warm sepia tones, historical fantasy"
+    },
+    ayur: {
+        id: "6944f46d02303e61a6d0a343", // <--- ⚠️ UPDATE THIS AFTER SIGNING UP
+        role: "Ayur (The Bio-Architect)",
+        domain: "Critique the artificiality of modern life. Advocate for 'Biomimicry'—solving problems the way nature does. Compare cities to forests and bodies to ecosystems. Explore the spiritual geometry of plants and the rhythm of the seasons.",
+        baseArtStyle: "lush botanical illustration, studio ghibli nature vibes, herbal aesthetics, soft greens and earthly browns, intricate details"
     }
 };
 
 // --- AI SETUP ---
+// --- AI SETUP & FALLBACK LOGIC ---
+const MODELS_PRIORITY = [
+    "gemini-3-flash-preview",
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+    "gemini-2.5-flash-lite"
+];
+
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-// USING GEMINI 2.5 FLASH AS REQUESTED
-const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash",
-    // Adding JSON mode for reliability
-    generationConfig: { responseMimeType: "application/json" }
-});
+
+async function generateContentWithFallback(prompt) {
+    console.log("🧠 Initiating Neural Handshake...");
+
+    for (const modelName of MODELS_PRIORITY) {
+        try {
+            console.log(`👉 Attempting with: ${modelName}`);
+            const model = genAI.getGenerativeModel({
+                model: modelName,
+                generationConfig: { responseMimeType: "application/json" }
+            });
+
+            // Attempt to generate the ACTUAL content directly
+            // This saves 1 Request per run (crucial for valid quotas)
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+
+            console.log(`✅ SUCCESS: Content generated by ${modelName}`);
+            return { text: response.text(), modelName };
+
+        } catch (error) {
+            // 429 = Quota Exceeded, 503 = Overloaded, 404 = Model Invalid
+            console.log(`⚠️ ${modelName} Failed: ${error.message.split('[')[0]}... (Switching)`);
+            // Continue to next model in loop
+        }
+    }
+    throw new Error("❌ ALL MODELS EXHAUSTED. Unable to write.");
+}
 
 async function generateBotPost() {
     try {
         console.log("🔌 Connecting to the Matrix...");
         await mongoose.connect(MONGO_URL);
 
-        // 1. Pick a Random Bot
+        // 1. GET LAST AUTHOR
+        // Check who wrote the very last post to avoid repeats
+        const lastPost = await Blog.findOne().sort({ createdAt: -1 });
+        let lastAuthorId = null;
+        if (lastPost) {
+            lastAuthorId = lastPost.createdBy.toString();
+        }
+
+        // 2. FILTER BOTS
+        // Create a list of bots EXCLUDING the one who just posted
         const botKeys = Object.keys(BOTS);
-        const randomKey = botKeys[Math.floor(Math.random() * botKeys.length)];
+        let availableBots = botKeys.filter(key => BOTS[key].id !== lastAuthorId);
+
+        // Fallback: If for some reason the array is empty (shouldn't happen), reset it
+        if (availableBots.length === 0) availableBots = botKeys;
+
+        // 3. PICK FROM AVAILABLE ONLY
+        const randomKey = availableBots[Math.floor(Math.random() * availableBots.length)];
         const bot = BOTS[randomKey];
 
         console.log(`🤖 Bot Activated: ${bot.role}`);
@@ -61,22 +118,26 @@ async function generateBotPost() {
         
         Task:
         1. Invent a UNIQUE, specific, and engaging blog topic within your domain. Do not use generic titles.
-        2. Write a blog post (under 500 words) in your specific persona/voice.
+        2. Write a comprehensive blog post (approx 800-1000 words).
+           - Use a clear structure: Introduction -> 3-4 Deeply Analyzed Main Points -> Conclusion.
+           - Use analogies, real-world examples, or historical comparisons.
         3. Create a visual description for a cover image that matches THIS specific post.
         
+        Constraint: While your tone is creative and philosophical, ANY historical dates, scientific principles, or real-world entities you mention must be FACTUALLY ACCURATE. Do not invent fake history or pseudoscience.
+
         Format: Return ONLY a raw JSON object with these keys:
         - "title": The blog headline.
         - "body": The content in Markdown (use headers, bold text, lists).
-        - "image_prompt": A physical description of the scene for the cover image. (e.g. "A glowing golden hourglass floating in space").
-        - "art_modifiers": 3-4 words describing the specific artistic style for this image (e.g. "oil painting, dark, abstract" or "digital art, clean lines").
+        - "image_prompt": A physical description of the scene for the cover image.
+        - "art_modifiers": 3-4 words describing the specific artistic style for this image.
         `;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+        // 3. GENERATE WITH FALLBACK
+        const { text, modelName } = await generateContentWithFallback(prompt);
 
-        // Clean JSON
-        const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        // Clean JSON: Extract the first JSON object found in the text
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        const cleanJson = jsonMatch ? jsonMatch[0] : text;
         let blogData;
 
         try {
