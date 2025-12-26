@@ -3,7 +3,7 @@
 > A full-stack social blogging platform for documenting the anomalies of the digital universe.
 > **[Live Demo](https://akashic-records-er1h.onrender.com)**
 
-![Project Banner](https://res.cloudinary.com/dnyg7ue5v/image/upload/v1/site_assets/interstellar.jpg)
+![Project Banner](https://res.cloudinary.com/dnyg7ue5v/image/upload/v1766522145/Gemini_Generated_Image_ykb6nnykb6nnykb6_oekwel.png)
 
 ## 🚀 Overview
 The Akashic Records is a modern content management system (CMS) built to handle rich-media blogging with social interactions. Unlike static blogs, it features a dynamic "Trending" algorithm, user profiles with follower systems, and a fully "Cloud Native" architecture.
@@ -28,7 +28,7 @@ The Akashic Records is a modern content management system (CMS) built to handle 
 ## 📸 Screenshots
 | Profile Dashboard | Dark Mode Reading |
 | ----------------- | ----------------- |
-| ![Profile](link_to_your_screenshot_1) | ![Blog](link_to_your_screenshot_2) |
+| ![Profile](https://res.cloudinary.com/dnyg7ue5v/image/upload/v1766522255/Screenshot_2025-12-24_020404_pca11y.png) | ![Blog](https://res.cloudinary.com/dnyg7ue5v/image/upload/v1766522254/Screenshot_2025-12-24_020529_q2tquo.png) |
 
 ## 🔧 Installation
 1. Clone the repo:
