@@ -17,9 +17,10 @@
                         <% function getFallbackImage(blog) { const defaultImages={ "693dc46dd348ddc001c50af9"
                             : "/images/default_ashvashira.jpg" , "693dc57bd348ddc001c50b02"
                             : "/images/default_yantrik.jpg" , "693dc5fcd348ddc001c50b0f" : "/images/default_otaku.jpg"
-                            }; const creatorId=blog.createdBy ? (blog.createdBy._id || blog.createdBy).toString() :
-                            null; return (creatorId && defaultImages[creatorId]) ? defaultImages[creatorId]
-                            : '/images/defaultBlog.png' ; } %>
+                            , "6935b54cec77d3663f57f863" : "/images/default_sutradhar.png" , "6944f46d02303e61a6d0a343"
+                            : "/images/default_ayur.png" }; const creatorId=blog.createdBy ? (blog.createdBy._id ||
+                            blog.createdBy).toString() : null; return (creatorId && defaultImages[creatorId]) ?
+                            defaultImages[creatorId] : '/images/defaultBlog.png' ; } %>
 
                             <% if (slider && slider.length> 0) { %>
                                 <div class="container mt-4 mb-5">
@@ -197,8 +198,8 @@
                                                     () {
                                                         const
                                                         hiddenCards = document.querySelectorAll('#talkTownGrid
-                                                            .hidden - card'); // Show next 4 for (let i=0; i <
-                                                                        4 && i < hiddenCards.length; i++) {
+                                                            .hidden - card'); // Show next 4 for (let i=0; i
+                                                            < 4 && i < hiddenCards.length; i++) {
                                                     hiddenCards[i].classList.remove('hidden-card');
                                                 } // Hide button if no more hidden cards if
                                                 (document.querySelectorAll('#talkTownGrid
