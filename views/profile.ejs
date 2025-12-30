@@ -228,14 +228,23 @@
                                             data-tilt-max-glare="0.2">
 
                                             <div style="height: 220px; overflow: hidden; position: relative;">
-                                                <img src="<%= (blog.coverImageURL && blog.coverImageURL.includes('/upload/')) ? blog.coverImageURL.replace('/upload/', '/upload/f_jpg,q_auto,w_600/') : blog.coverImageURL %>"
-                                                    class="w-100 h-100" style="object-fit: cover;"
-                                                    onerror="fallbackBlogImage(this, '<%= profileUser._id %>')">
-                                                <div class="position-absolute top-0 end-0 p-2">
-                                                    <span class="badge bg-black bg-opacity-75 backdrop-blur">
-                                                        <%= blog.createdAt.toLocaleDateString() %>
-                                                    </span>
-                                                </div>
+                                                <% const defaultImages={ "693dc46dd348ddc001c50af9"
+                                                    : "/images/default_ashvashira.jpg" , "693dc57bd348ddc001c50b02"
+                                                    : "/images/default_yantrik.jpg" , "693dc5fcd348ddc001c50b0f"
+                                                    : "/images/default_otaku.jpg" , "6935b54cec77d3663f57f863"
+                                                    : "/images/default_sutradhar.png" , "6944f46d02303e61a6d0a343"
+                                                    : "/images/default_ayur.png" }; const
+                                                    pUserId=profileUser._id.toString(); const
+                                                    fallbackImage=defaultImages[pUserId] || '/images/defaultBlog.png' ;
+                                                    %>
+                                                    <img src="<%= (blog.coverImageURL && blog.coverImageURL.includes('/upload/')) ? blog.coverImageURL.replace('/upload/', '/upload/f_jpg,q_auto,w_600/') : (blog.coverImageURL || fallbackImage) %>"
+                                                        class="w-100 h-100" style="object-fit: cover;"
+                                                        onerror="this.onerror=null;this.src='<%= fallbackImage %>';">
+                                                    <div class="position-absolute top-0 end-0 p-2">
+                                                        <span class="badge bg-black bg-opacity-75 backdrop-blur">
+                                                            <%= blog.createdAt.toLocaleDateString() %>
+                                                        </span>
+                                                    </div>
                                             </div>
 
                                             <div class="card-body d-flex flex-column p-4">

@@ -8,6 +8,7 @@ const Blog = require('./models/blog');
 // --- CONFIGURATION ---
 const MONGO_URL = process.env.MONGO_URL;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const POLLINATIONS_TOKEN = process.env.POLLINATIONS_TOKEN; // <--- LOAD THE KEY
 
 // --- 🤖 BOT PERSONAS (No more fixed topics!) ---
 const BOTS = {
@@ -123,13 +124,13 @@ async function generateBotPost() {
            - Use a clear structure: Introduction -> 3-4 Deeply Analyzed Main Points -> Conclusion.
            - Use analogies, real-world examples, or historical comparisons.
         3. Create a visual description for a cover image that matches THIS specific post.
-        
+
         Constraint: While your tone is creative and philosophical, ANY historical dates, scientific principles, or real-world entities you mention must be FACTUALLY ACCURATE. Do not invent fake history or pseudoscience.
 
         Format: Return ONLY a raw JSON object with these keys:
         - "title": The blog headline.
         - "body": The content in Markdown (use headers, bold text, lists).
-        - "image_prompt": A physical description of the scene for the cover image.
+        - "image_prompt": A physical description of the scene for the cover image. MAX 15 WORDS.
         - "art_modifiers": 3-4 words describing the specific artistic style for this image.
         `;
 
@@ -148,29 +149,66 @@ async function generateBotPost() {
             return;
         }
 
-        // 3. Dynamic Image Generation
-        // We combine the AI's specific scene + AI's chosen style + Bot's base vibe
-        // This ensures every image looks different!
-        const finalImagePrompt = `${blogData.image_prompt}, ${blogData.art_modifiers}, ${bot.baseArtStyle}`;
-        const encodedPrompt = encodeURIComponent(finalImagePrompt);
+        // 5. GENERATE IMAGE LINK
+        // ✂️ TRUNCATE: Force prompt to be under 300 characters to prevent URL crashes
+        let rawPrompt = `${blogData.image_prompt}, ${blogData.art_modifiers}, ${bot.baseArtStyle}`;
+        if (rawPrompt.length > 300) {
+            rawPrompt = rawPrompt.substring(0, 300); // Cut it off
+        }
 
-        // Random seed ensures pixel-perfect uniqueness
+        const encodedPrompt = encodeURIComponent(rawPrompt);
         const seed = Math.floor(Math.random() * 9999);
-        const aiImageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&nologo=true&seed=${seed}`;
 
-        console.log(`📝 Generated: "${blogData.title}"`);
-        console.log(`🎨 Art Style: "${blogData.art_modifiers}"`);
+        let aiImageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&nologo=true&seed=${seed}`;
+
+        if (POLLINATIONS_TOKEN) {
+            aiImageUrl += `&token=${POLLINATIONS_TOKEN}`;
+        }
+
+        console.log(`🎨 Generated URL: ${aiImageUrl}`); // PRINT THE URL FOR DEBUGGING
+
+        // 🕵️‍♂️ AGGRESSIVE VALIDATION
+        let validImageUrl = aiImageUrl;
+
+        try {
+            // USE GET instead of HEAD (HEAD usually returns null size for dynamic AI images)
+            const imgResponse = await fetch(aiImageUrl);
+
+            // Get the data buffer to check REAL size
+            const arrayBuffer = await imgResponse.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            const size = buffer.length;
+            const type = imgResponse.headers.get('content-type');
+
+            console.log(`stats: [${type}] - ${size} bytes`);
+
+            // 1. Check if it's actually an image
+            if (!type || !type.startsWith('image')) {
+                console.warn(`⚠️ API returned ${type} (Not an image). Switching to Default.`);
+                validImageUrl = "";
+            }
+            // 2. Check size (Glitch images are usually < 4KB. Valid simpler images can be 20KB+)
+            else if (size < 5000) {
+                console.warn(`⚠️ Image too small (${size} bytes). Glitch detected. Switching to Default.`);
+                validImageUrl = "";
+            } else {
+                console.log("✅ AI Art Verified & Live.");
+            }
+        } catch (imgError) {
+            console.warn(`⚠️ Validation Network Error: ${imgError.message}`);
+            validImageUrl = "";
+        }
 
         // 4. Save to Database
         const newBlog = new Blog({
             title: blogData.title,
             body: blogData.body,
-            coverImageURL: aiImageUrl,
+            coverImageURL: validImageUrl,
             createdBy: bot.id,
         });
 
         await newBlog.save();
-        console.log(`✅ POST DEPLOYED successfully.`);
+        console.log(`✅ POST DEPLOYED: "${blogData.title}"`);
 
     } catch (error) {
         console.error("❌ Glitch in the system:", error);
