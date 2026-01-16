@@ -356,9 +356,7 @@ a:hover {
 /* Split Screen Container */
 /* Signup Specific Background */
 /* Signup Specific Background (Target pseudo-element) */
-.signup-bg::before {
-  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/f_auto,q_auto/v1765452879/-Buddha_ojlarp.jpg') !important;
-}
+/* Old signup override removed */
 
 /* 2. Make the left panel transparent and blurry */
 .auth-left {
@@ -548,10 +546,7 @@ a:hover {
   display: flex;
   height: 100vh;
   width: 100%;
-  /* Move the background image to the parent container so it's behind everything */
-  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/f_auto,q_auto/v1765452879/-Buddha_ojlarp.jpg');
-  background-size: cover;
-  background-position: center;
+  /* Background moved to ::before to allow filtering and overriding */
 }
 
 /* 2. Make the left panel transparent and blurry */
@@ -762,15 +757,23 @@ a:hover {
   width: 100%;
   height: 100%;
 
-  /* Default Background (Signin) */
-  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/f_auto,q_auto/v1765452965/defaultBlog_uplqdu.png');
+  /* Backgrounds defined in specific classes below */
   background-size: cover;
   background-position: center;
   z-index: -1;
 
   /* THE REQUESTED FILTER */
-  filter: grayscale(100%) sepia(100%) hue-rotate(170deg) saturate(300%) contrast(1.2);
-  opacity: 0.8;
+  /* Filter removed as per user request */
+  opacity: 1;
+}
+
+/* Explicit Background Rules */
+.signin-bg::before {
+  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452879/-Buddha_ojlarp.jpg');
+}
+
+.signup-bg::before {
+  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452877/Buddha_sz0tpe.jpg');
 }
 
 /* 2. Make the left panel transparent and blurry */
@@ -983,7 +986,8 @@ a:hover {
 
 /* Sign-In Specific Background */
 .signin-bg::before {
-  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/f_auto,q_auto/v1765452877/Buddha_sz0tpe.jpg') !important;
+  /* Added a_hflip to vertically mirror the image (Horizontal flip) via Cloudinary */
+  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/a_hflip,f_auto,q_auto/v1765452877/Buddha_sz0tpe.jpg') !important;
 }
 
 /* 1. The Magic Flip Class */
@@ -1308,11 +1312,14 @@ body {
 
 /* Ensure html also doesn't show it if body doesn't cover everything */
 html {
+  background-color: #050505;
+  /* Matches body background to prevent white swipe flash */
   -ms-overflow-style: none;
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
 }
+
 
 html::-webkit-scrollbar {
   display: none;

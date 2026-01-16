@@ -256,10 +256,10 @@
                                                     <a href="/blog/<%= blog._id %>"
                                                         class="btn btn-sm btn-light flex-grow-1 rounded-pill fw-bold">Read</a>
                                                     <% if (locals.isOwner) { %>
-                                                        <a href="/blog/edit/<%= blog._id %>"
+                                                        <a href="/blog/<%= blog._id %>/edit"
                                                             class="btn btn-circle btn-dark border border-secondary text-warning"><i
                                                                 class="fa-solid fa-pen"></i></a>
-                                                        <a href="/blog/delete/<%= blog._id %>"
+                                                        <a href="/blog/<%= blog._id %>/delete"
                                                             class="btn btn-circle btn-dark border border-secondary text-danger"><i
                                                                 class="fa-solid fa-trash"></i></a>
                                                         <% } %>

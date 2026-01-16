@@ -12,3 +12,28 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/images/A_favicon/favicon-16x16.png">
 <link rel="manifest" href="/images/A_favicon/site.webmanifest">
 <link rel="shortcut icon" href="/images/A_favicon/favicon.ico">
+
+<script>
+    (function () {
+        // defined strictly for theme init to prevent FOUC and handle History/BFCache
+        const applyTheme = () => {
+            const theme = localStorage.getItem('theme');
+            const htmlEl = document.documentElement;
+            if (theme === 'light') {
+                htmlEl.classList.add('light-mode');
+            } else {
+                htmlEl.classList.remove('light-mode');
+            }
+        };
+
+        // Apply immediately
+        applyTheme();
+
+        // Re-apply on history navigation (fix for trackpad swipe / back button)
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                applyTheme();
+            }
+        });
+    })();
+</script>

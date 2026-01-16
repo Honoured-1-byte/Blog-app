@@ -3,11 +3,16 @@
     crossorigin="anonymous"></script>
 
 <script>
+    // THEME TOGGLE LOGIC
     const toggleBtn = document.getElementById('themeToggle');
     const htmlElement = document.documentElement;
-    const icon = toggleBtn.querySelector('i');
 
+    // Helper to update the icon based on current state
     function updateIcon(isLight) {
+        // Guard clause if button doesn't exist on this page
+        if (!toggleBtn) return;
+
+        const icon = toggleBtn.querySelector('i');
         if (isLight) {
             icon.classList.remove('fa-sun');
             icon.classList.add('fa-moon');
@@ -17,10 +22,11 @@
         }
     }
 
-    // 1. Check if user already chose a mode
-    if (localStorage.getItem('theme') === 'light') {
-        htmlElement.classList.add('light-mode');
+    // 1. Set initial icon state based on what the <head> script did
+    if (htmlElement.classList.contains('light-mode')) {
         updateIcon(true);
+    } else {
+        updateIcon(false);
     }
 
     // 2. Toggle on click
