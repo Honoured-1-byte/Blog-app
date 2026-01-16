@@ -1,0 +1,303 @@
+<%- include('./partials/heads') %>
+    <%- include('./partials/nav') %>
+
+        <style>
+            /* 1. BACKGROUND (Keep your Cosmic Vibe) */
+            /* 1. BACKGROUND GRID (Inherited from global style.css) */
+            /* Custom body override removed */
+
+            /* 2. PORTFOLIO HEADER STYLES */
+
+            /* 2. PORTFOLIO HEADER STYLES */
+            .profile-header {
+                padding-top: 60px;
+                padding-bottom: 20px;
+            }
+
+            /* Large Avatar (Matches Reference) */
+            .profile-avatar {
+                width: 160px;
+                height: 160px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 5px solid #050505;
+                /* Matches body bg to look cut-out */
+                box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+                /* Thin outer ring */
+            }
+
+            /* "PRO" Badge */
+            .badge-pro {
+                background: linear-gradient(135deg, #0dcaf0, #0d6efd);
+                color: #fff;
+                font-size: 0.7rem;
+                padding: 4px 8px;
+                border-radius: 6px;
+                vertical-align: middle;
+                margin-left: 10px;
+                letter-spacing: 1px;
+                box-shadow: 0 4px 10px rgba(13, 202, 240, 0.3);
+            }
+
+            /* Stats Block */
+            .stat-box h2 {
+                font-weight: 800;
+                font-size: 2rem;
+                margin: 0;
+            }
+
+            .stat-box p {
+                color: #888;
+                text-transform: uppercase;
+                font-size: 0.75rem;
+                letter-spacing: 1px;
+                font-weight: 600;
+                margin: 0;
+            }
+
+            /* 3. NAVIGATION TABS (The Line Menu) */
+            .profile-tabs {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                margin-bottom: 40px;
+                margin-top: 40px;
+            }
+
+            .tab-item {
+                color: #888;
+                text-decoration: none;
+                font-weight: 600;
+                padding: 15px 5px;
+                margin-right: 30px;
+                display: inline-block;
+                border-bottom: 2px solid transparent;
+                transition: all 0.3s;
+            }
+
+            .tab-item:hover {
+                color: #fff;
+            }
+
+            .tab-item.active {
+                color: #fff;
+                border-bottom-color: #0dcaf0;
+                /* Cyan Active Line */
+            }
+
+            .tab-count {
+                font-size: 0.7rem;
+                vertical-align: top;
+                margin-left: 2px;
+                opacity: 0.7;
+            }
+
+            /* 4. KEEPING YOUR 3D GRID STYLES */
+            .blog-card {
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                background: rgba(20, 20, 20, 0.6);
+                transform-style: preserve-3d;
+                transform: perspective(1000px);
+            }
+
+            /* Circular Buttons */
+            .btn-circle {
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+                padding: 0;
+            }
+
+            .btn-circle:hover {
+                transform: scale(1.1);
+            }
+        </style>
+
+        <div class="container profile-header">
+            <div class="row align-items-center">
+
+                <div class="col-lg-auto text-center text-lg-start mb-4 mb-lg-0">
+                    <img src="<%= profileUser.profileImageURL ? profileUser.profileImageURL : '/images/default_profile.jpeg' %>"
+                        class="profile-avatar" onerror="this.onerror=null; this.src='/images/default_profile.jpeg';">
+                </div>
+
+                <div class="col-lg ps-lg-5 text-center text-lg-start">
+                    <h1 class="fw-bold mb-2">
+                        <%= profileUser.fullName %> <span class="badge-pro">
+                                <%= profileUser.role %>
+                            </span>
+                    </h1>
+                    <p class="text-secondary mb-4 fs-5">
+                        <%= profileUser.email %>
+                    </p>
+
+                    <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
+                        <% if (locals.isOwner) { %>
+                            <a href="/blog/add-new" class="btn btn-light rounded-pill px-4 fw-bold">
+                                Write New
+                            </a>
+                            <a href="/user/edit-profile" class="btn btn-outline-secondary rounded-pill px-4">
+                                Edit Profile
+                            </a>
+                            <% } else { %>
+                                <% const isFollowing=profileUser.followers.map(id=>
+                                    id.toString()).includes(currentUser?._id.toString()); %>
+
+                                    <button id="followBtn" onclick="toggleFollow('<%= profileUser._id %>')"
+                                        class="btn <%= isFollowing ? 'btn-secondary' : 'btn-info' %> rounded-pill px-4 fw-bold">
+                                        <%= isFollowing ? 'Unfollow' : 'Follow' %>
+                                    </button>
+                                    <% } %>
+                    </div>
+                </div>
+
+                <div class="col-lg-auto mt-4 mt-lg-0">
+                    <div class="d-flex gap-5 justify-content-center profile-stats">
+                        <div class="text-center stat-box">
+                            <h2>
+                                <%= blogs.length %>
+                            </h2>
+                            <p>Works</p>
+                        </div>
+                        <div class="text-center stat-box">
+                            <h2 id="followerCount">
+                                <%= profileUser.followers.length %>
+                            </h2>
+                            <p>Followers</p>
+                        </div>
+                        <div class="text-center stat-box">
+                            <h2>
+                                <%= profileUser.following.length %>
+                            </h2>
+                            <p>Following</p>
+                        </div>
+                        <div class="text-center stat-box">
+                            <h2>
+                                <%= totalLikes %>
+                            </h2>
+                            <p>Likes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-tabs d-flex justify-content-center justify-content-lg-start">
+
+                <a href="/user/profile?tab=work" class="tab-item <%= locals.currentTab === 'work' ? 'active' : '' %>">
+                    Work
+                </a>
+
+                <a href="/user/profile?tab=about"
+                    class="tab-item <%= locals.currentTab === 'about' ? 'active' : '' %>">About</a>
+
+                <a href="/user/profile?tab=saved" class="tab-item <%= locals.currentTab === 'saved' ? 'active' : '' %>">
+                    Saved
+                </a>
+
+            </div>
+
+            <% if (locals.currentTab==='about' ) { %>
+
+                <div class="row justify-content-center py-5">
+                    <div class="col-md-8 text-center">
+                        <h2 class="fw-bold mb-4" style="font-family: 'Cinzel', serif;">About The Author</h2>
+                        <p class="fs-4 text-light" style="line-height: 1.8;">
+                            "<%= profileUser.bio %>"
+                        </p>
+                        <hr class="border-secondary my-5 w-50 mx-auto">
+                        <p class="text-secondary">
+                            Joined on <%= profileUser.createdAt.toLocaleDateString() %>
+                        </p>
+                    </div>
+                </div>
+
+                <% } else { %>
+
+                    <% if (blogs.length===0) { %>
+                        <div class="text-center py-5">
+                            <h3 class="text-secondary opacity-50">No Works Published.</h3>
+                        </div>
+                        <% } else { %>
+                            <div class="row row-cols-1 row-cols-md-3 g-4 pb-5">
+                                <% blogs.forEach(blog=> { %>
+                                    <div class="col">
+                                        <div class="card h-100 blog-card rounded-4 overflow-hidden text-light position-relative"
+                                            data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare
+                                            data-tilt-max-glare="0.2">
+
+                                            <div style="height: 220px; overflow: hidden; position: relative;">
+                                                <% const defaultImages={ "693dc46dd348ddc001c50af9"
+                                                    : "/images/default_ashvashira.jpg" , "693dc57bd348ddc001c50b02"
+                                                    : "/images/default_yantrik.jpg" , "693dc5fcd348ddc001c50b0f"
+                                                    : "/images/default_otaku.jpg" , "6935b54cec77d3663f57f863"
+                                                    : "/images/default_sutradhar.png" , "6944f46d02303e61a6d0a343"
+                                                    : "/images/default_ayur.png" }; const
+                                                    pUserId=profileUser._id.toString(); const
+                                                    fallbackImage=defaultImages[pUserId] || '/images/defaultBlog.png' ;
+                                                    %>
+                                                    <img src="<%= (blog.coverImageURL && blog.coverImageURL.includes('/upload/')) ? blog.coverImageURL.replace('/upload/', '/upload/f_jpg,q_auto,w_600/') : (blog.coverImageURL || fallbackImage) %>"
+                                                        class="w-100 h-100" style="object-fit: cover;"
+                                                        onerror="this.onerror=null;this.src='<%= fallbackImage %>';">
+                                                    <div class="position-absolute top-0 end-0 p-2">
+                                                        <span class="badge bg-black bg-opacity-75 backdrop-blur">
+                                                            <%= blog.createdAt.toLocaleDateString() %>
+                                                        </span>
+                                                    </div>
+                                            </div>
+
+                                            <div class="card-body d-flex flex-column p-4">
+                                                <h5 class="card-title fw-bold mb-3 text-truncate">
+                                                    <%= blog.title %>
+                                                </h5>
+
+                                                <div class="mt-auto d-flex align-items-center gap-2">
+                                                    <a href="/blog/<%= blog._id %>"
+                                                        class="btn btn-sm btn-light flex-grow-1 rounded-pill fw-bold">Read</a>
+                                                    <% if (locals.isOwner) { %>
+                                                        <a href="/blog/edit/<%= blog._id %>"
+                                                            class="btn btn-circle btn-dark border border-secondary text-warning"><i
+                                                                class="fa-solid fa-pen"></i></a>
+                                                        <a href="/blog/delete/<%= blog._id %>"
+                                                            class="btn btn-circle btn-dark border border-secondary text-danger"><i
+                                                                class="fa-solid fa-trash"></i></a>
+                                                        <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                            </div>
+                            <% } %>
+
+                                <% } %>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
+
+        <script>
+            async function toggleFollow(userId) {
+                const btn = document.getElementById('followBtn');
+                const countSpan = document.getElementById('followerCount');
+
+                const response = await fetch(`/user/follow/${userId}`);
+                const data = await response.json();
+
+                if (data.status === 'error') return;
+
+                if (data.status === 'followed') {
+                    btn.innerText = "Unfollow";
+                    btn.classList.remove('btn-info');
+                    btn.classList.add('btn-secondary');
+                    countSpan.innerText = data.count;
+                } else if (data.status === 'unfollowed') {
+                    btn.innerText = "Follow";
+                    btn.classList.remove('btn-secondary');
+                    btn.classList.add('btn-info');
+                    countSpan.innerText = data.count;
+                }
+            }
+        </script>
+        <%- include('./partials/footer') %>
+            <%- include('./partials/scripts') %>

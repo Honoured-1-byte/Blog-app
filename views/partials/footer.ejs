@@ -1,0 +1,603 @@
+<style>
+    /* FOOTER STYLES */
+    .akashic-footer {
+        background: #020617;
+        /* Deepest Navy */
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        color: #888;
+        padding: 80px 0 40px;
+        position: relative;
+        margin-top: auto;
+        /* Pushes footer to bottom if content is short */
+    }
+
+    .footer-brand {
+        font-family: 'Cinzel', serif;
+        font-size: 1.5rem;
+        color: #fff;
+        text-decoration: none;
+        letter-spacing: 2px;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    .footer-desc {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        max-width: 300px;
+    }
+
+    .footer-heading {
+        color: #fff;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        margin-bottom: 25px;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+
+    .footer-links a {
+        color: #888;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-size: 0.95rem;
+    }
+
+    .footer-links a:hover {
+        color: #0dcaf0;
+        /* Cyan Hover */
+        padding-left: 5px;
+        /* Tiny slide effect */
+    }
+
+    .social-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        text-decoration: none;
+        margin-right: 10px;
+        transition: all 0.3s;
+    }
+
+    .social-btn:hover {
+        background: #0dcaf0;
+        color: #000;
+        transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        margin-top: 60px;
+        padding-top: 30px;
+        font-size: 0.85rem;
+    }
+</style>
+
+<footer class="akashic-footer">
+    <div class="container">
+        <div class="row g-5">
+
+            <div class="col-lg-4">
+                <a href="/" class="footer-brand">The Akashic Records</a>
+                <p class="footer-desc">
+                    Documenting the anomalies of the digital universe. A curated archive of thoughts, theories, and
+                    tech.
+                </p>
+                <div class="mt-4">
+                    <a href="https://github.com/Honoured-1-byte" class="social-btn" target="_blank"><i
+                            class="fa-brands fa-github"></i></a>
+                    <a href="https://leetcode.com/u/Honoured_One_25/" class="social-btn" target="_blank"><i
+                            class="fa-solid fa-code"></i></a>
+                    <a href="https://www.linkedin.com/in/yash-seth-9b0536351/" class="social-btn" target="_blank"><i
+                            class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-2 offset-lg-1">
+                <h5 class="footer-heading">Explore</h5>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/search?query=tech">Deep Dives</a></li>
+                    <li><a href="/search?query=anime">Latest Drops</a></li>
+                    <li><a href="/user/profile?tab=about">About Author</a></li>
+                </ul>
+            </div>
+
+            <div class="col-6 col-lg-2">
+                <h5 class="footer-heading">Account</h5>
+                <ul class="footer-links">
+                    <% if (locals.user) { %>
+                        <li><a href="/user/profile">My Profile</a></li>
+                        <li><a href="/user/profile?tab=saved">Saved</a></li>
+                        <li><a href="/blog/add-new">Write New</a></li>
+                        <li><a href="/user/logout">Logout</a></li>
+                        <% } else { %>
+                            <li><a href="/user/signin">Sign In</a></li>
+                            <li><a href="/user/signup">Get Started</a></li>
+                            <% } %>
+                </ul>
+            </div>
+
+            <div class="col-lg-3">
+                <h5 class="footer-heading">Stay Updated</h5>
+                <p class="small mb-3">Get the latest anomalies delivered to your inbox.</p>
+                <form id="newsletterForm" class="d-flex gap-2 align-items-center" onsubmit="handleSubscribe(event)">
+                    <input type="email" class="form-control bg-dark border-secondary text-light form-control-sm"
+                        placeholder="Email address" required>
+                    <button type="submit" id="subBtn" class="btn btn-info btn-sm fw-bold">Join</button>
+                </form>
+
+                <script>
+                    function handleSubscribe(e) {
+                        e.preventDefault(); // Stop page from reloading
+
+                        const btn = document.getElementById('subBtn');
+                        const originalText = btn.innerText;
+
+                        // Change button to loading state
+                        btn.innerText = "...";
+                        btn.disabled = true;
+
+                        // Wait 1 second (simulating server request)
+                        setTimeout(() => {
+                            btn.classList.remove('btn-info');
+                            btn.classList.add('btn-success');
+                            btn.innerHTML = '<i class="fa-solid fa-check"></i> Joined';
+
+                            // Optional: Reset after 3 seconds
+                            setTimeout(() => {
+                                btn.classList.remove('btn-success');
+                                btn.classList.add('btn-info');
+                                btn.innerText = originalText;
+                                btn.disabled = false;
+                                document.getElementById('newsletterForm').reset();
+                            }, 3000);
+                        }, 1000);
+                    }
+                </script>
+            </div>
+        </div>
+
+        <div class="footer-bottom d-flex justify-content-between align-items-center flex-wrap">
+            <div>&copy; <%= new Date().getFullYear() %> Akashic Records. All rights reserved.</div>
+            <div>
+                <a href="#" class="text-secondary text-decoration-none me-3">Privacy Policy</a>
+                <a href="#" class="text-secondary text-decoration-none">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div id="preloader">
+    <div class="void-container">
+
+        <div class="seraphim-ring">
+
+            <div class="eye-wrapper" style="--rot: 30deg; --dark: #D00000; --mid: #FF1F1F; --light: #FFC2C2;">
+                <div class="eye-lid-container horizontal sharp">
+                    <div class="eye-ball">
+                        <div class="iris-ring"></div>
+                        <div class="pupil"></div>
+                        <div class="light-reflection"></div>
+                    </div>
+                    <div class="eyelid top"></div>
+                    <div class="eyelid bottom"></div>
+                </div>
+            </div>
+
+            <div class="eye-wrapper" style="--rot: 90deg; --dark: #D65A00; --mid: #FF7F00; --light: #FFD4A8;">
+                <div class="eye-lid-container horizontal sharp">
+                    <div class="eye-ball">
+                        <div class="iris-ring"></div>
+                        <div class="pupil"></div>
+                        <div class="light-reflection"></div>
+                    </div>
+                    <div class="eyelid top"></div>
+                    <div class="eyelid bottom"></div>
+                </div>
+            </div>
+
+            <div class="eye-wrapper" style="--rot: 150deg; --dark: #C7A000; --mid: #FFD700; --light: #FFF4B8;">
+                <div class="eye-lid-container horizontal sharp">
+                    <div class="eye-ball">
+                        <div class="iris-ring"></div>
+                        <div class="pupil"></div>
+                        <div class="light-reflection"></div>
+                    </div>
+                    <div class="eyelid top"></div>
+                    <div class="eyelid bottom"></div>
+                </div>
+            </div>
+
+            <div class="eye-wrapper" style="--rot: 210deg; --dark: #008F39; --mid: #39FF14; --light: #B8FFC8;">
+                <div class="eye-lid-container horizontal sharp">
+                    <div class="eye-ball">
+                        <div class="iris-ring"></div>
+                        <div class="pupil"></div>
+                        <div class="light-reflection"></div>
+                    </div>
+                    <div class="eyelid top"></div>
+                    <div class="eyelid bottom"></div>
+                </div>
+            </div>
+
+            <div class="eye-wrapper" style="--rot: 270deg; --dark: #45B0D2; --mid: #7DF9FF; --light: #bdffff;">
+                <div class="eye-lid-container horizontal sharp">
+                    <div class="eye-ball">
+                        <div class="iris-ring"></div>
+                        <div class="pupil"></div>
+                        <div class="light-reflection"></div>
+                    </div>
+                    <div class="eyelid top"></div>
+                    <div class="eyelid bottom"></div>
+                </div>
+            </div>
+
+            <div class="eye-wrapper" style="--rot: 330deg; --dark: #6A00BA; --mid: #B24BF3; --light: #EABFFF;">
+                <div class="eye-lid-container horizontal sharp">
+                    <div class="eye-ball">
+                        <div class="iris-ring"></div>
+                        <div class="pupil"></div>
+                        <div class="light-reflection"></div>
+                    </div>
+                    <div class="eyelid top"></div>
+                    <div class="eyelid bottom"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <h3 class="loading-text" data-text="GAZING INTO THE ABYSS...">GAZING INTO THE ABYSS...</h3>
+    </div>
+</div>
+
+<style>
+    /* --- BASE VARIABLES --- */
+    :root {
+        --core-black: #000000;
+        --sclera: #ffffff;
+    }
+
+    /* 1. THE VOID */
+    #preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.5s ease-out, visibility 0.5s;
+    }
+
+    #preloader.instant-hide {
+        display: none !important;
+    }
+
+    .hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .void-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* 2. THE SERAPHIM RING */
+    .seraphim-ring {
+        position: relative;
+        width: 1px;
+        height: 1px;
+        /* Center point */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: slow-rotate 60s linear infinite;
+    }
+
+    /* 3. INDIVIDUAL EYE WRAPPER */
+    .eye-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        /* Rotate to angle, then move outward WIDE SPREAD (250px radius). */
+        transform: rotate(var(--rot)) translate(250px);
+    }
+
+    /* 4. THE EYE STRUCTURE (Horizontal Sharp) */
+    .eye-lid-container.horizontal.sharp {
+        position: relative;
+        width: 160px;
+        height: 80px;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        clip-path: path('M 0 40 C 40 0, 120 0, 160 40 C 120 80, 40 80, 0 40 Z');
+        -webkit-clip-path: path('M 0 40 C 40 0, 120 0, 160 40 C 120 80, 40 80, 0 40 Z');
+    }
+
+    /* 5. THE EYEBALL (Dynamic 3-Layer Gradient) */
+    /* This uses the exact same logic as your Blue eye, but with variables */
+    .eye-ball {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle,
+                var(--dark) 15%,
+                var(--mid) 35%,
+                var(--light) 50%,
+                var(--dark) 60%,
+                var(--sclera) 60.5%);
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    }
+
+    /* 6. IRIS & PUPIL */
+    .iris-ring {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        border: 2px dashed #fff;
+        border-radius: 50%;
+        opacity: 0.5;
+        animation: spin-right 12s linear infinite;
+        mix-blend-mode: overlay;
+    }
+
+    .pupil {
+        width: 20px;
+        height: 20px;
+        background: var(--core-black);
+        border-radius: 50%;
+        /* Pupil glow uses the Darkest shade for depth */
+        box-shadow: 0 0 10px var(--dark);
+        z-index: 2;
+        animation: dilate 4s ease-in-out infinite;
+    }
+
+    .light-reflection {
+        position: absolute;
+        top: 25%;
+        left: 30%;
+        width: 12px;
+        height: 12px;
+        background: #fff;
+        border-radius: 50%;
+        filter: blur(2px);
+        z-index: 5;
+    }
+
+    /* 7. THE EYELIDS */
+    .eyelid {
+        position: absolute;
+        width: 100%;
+        height: 60%;
+        background: #000;
+        z-index: 10;
+        transition: transform 0.1s;
+    }
+
+    .eyelid.top {
+        top: 0;
+        border-bottom: 2px solid var(--mid);
+        /* Rim matches Electric color */
+        animation: open-top 3.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .eyelid.bottom {
+        bottom: 0;
+        border-top: 2px solid var(--mid);
+        /* Rim matches Electric color */
+        animation: open-bottom 3.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* 8. TEXT */
+    .loading-text {
+        font-family: 'Courier New', monospace;
+        letter-spacing: 3px;
+        color: #ffffff;
+        font-size: 1rem;
+        position: absolute;
+        /* CENTERED */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        z-index: 20;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        text-align: center;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .loading-text::before {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        color: #fff;
+        opacity: 0.5;
+        animation: glitch-text 2.5s infinite;
+    }
+
+    @keyframes slow-rotate {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes spin-right {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes dilate {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.15);
+        }
+    }
+
+    @keyframes open-top {
+
+        0%,
+        15% {
+            transform: translateY(0) scaleY(1);
+        }
+
+        100% {
+            transform: translateY(-105%) scaleY(0.8);
+        }
+    }
+
+    @keyframes open-bottom {
+
+        0%,
+        15% {
+            transform: translateY(0) scaleY(1);
+        }
+
+        100% {
+            transform: translateY(105%) scaleY(0.8);
+        }
+    }
+
+    @keyframes glitch-text {
+        0% {
+            clip-path: inset(0 0 0 0);
+            transform: translate(0);
+        }
+
+        5% {
+            clip-path: inset(20% 0 0 0);
+            transform: translate(-2px, 2px);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 0);
+            transform: translate(0);
+        }
+    }
+
+    /* ========================================= */
+    /* THE VOID STARFIELD (Background Depth)    */
+    /* ========================================= */
+
+    /* 1. Create the Stars using a single element and box-shadows (High Performance) */
+    .void-container::before {
+        content: " ";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 2px;
+        height: 2px;
+        background: transparent;
+        z-index: -1;
+        /* Behind the eyes */
+
+        /* This creates hundreds of stars using just shadows */
+        box-shadow:
+            10vw 10vh #fff, 20vw 80vh #fff, 80vw 10vh #fff, 90vw 90vh #fff,
+            40vw 30vh #fff, 60vw 50vh #fff, 10vw 90vh #fff, 50vw 10vh #fff,
+            30vw 40vh #888, 70vw 20vh #888, 20vw 60vh #888, 50vw 80vh #888,
+            85vw 35vh #fff, 15vw 55vh #fff, 65vw 15vh #fff, 35vw 85vh #fff,
+            /* Add slight color variation for magic feel */
+            25vw 25vh #7DF9FF, 75vw 75vh #B24BF3,
+            45vw 65vh #FF1F1F, 55vw 35vh #39FF14;
+
+        opacity: 0.5;
+        animation: star-drift 100s linear infinite;
+    }
+
+    /* 2. Optional: A subtle central glow behind the ring */
+    .seraphim-ring::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: -1;
+        animation: pulse-void 4s ease-in-out infinite;
+    }
+
+    /* ANIMATIONS */
+    @keyframes star-drift {
+        from {
+            transform: translateY(0);
+        }
+
+        to {
+            transform: translateY(-100vh);
+        }
+    }
+
+    @keyframes pulse-void {
+
+        0%,
+        100% {
+            opacity: 0.5;
+            scale: 1;
+        }
+
+        50% {
+            opacity: 1;
+            scale: 1.2;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const preloader = document.getElementById('preloader');
+        if (sessionStorage.getItem('introShown')) {
+            preloader.classList.add('instant-hide');
+        } else {
+            sessionStorage.setItem('introShown', 'true');
+            window.addEventListener("load", function () {
+                setTimeout(() => {
+                    preloader.classList.add('hidden');
+                }, 4000);
+            });
+        }
+    });
+</script>

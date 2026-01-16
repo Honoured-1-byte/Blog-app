@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/heads') %>
+        <title>Homepage</title>
+</head>
+
+<body>
+    <%- include('./partials/nav') %>
+
+        <% if (typeof slider==='undefined' ) { var slider=[]; } %>
+            <% if (typeof trending==='undefined' ) { var trending=[]; } %>
+                <% if (typeof latest==='undefined' ) { var latest=[]; } %>
+                    <% if (typeof deepDives==='undefined' ) { var deepDives=[]; } %>
+
+                        <% function getFallbackImage(blog) { const defaultImages={ "693dc46dd348ddc001c50af9"
+                            : "/images/default_ashvashira.jpg" , "693dc57bd348ddc001c50b02"
+                            : "/images/default_yantrik.jpg" , "693dc5fcd348ddc001c50b0f" : "/images/default_otaku.jpg"
+                            , "6935b54cec77d3663f57f863" : "/images/default_sutradhar.png" , "6944f46d02303e61a6d0a343"
+                            : "/images/default_ayur.png" }; const creatorId=blog.createdBy ? (blog.createdBy._id ||
+                            blog.createdBy).toString() : null; return (creatorId && defaultImages[creatorId]) ?
+                            defaultImages[creatorId] : '/images/defaultBlog.png' ; } %>
+
+                            <% if (slider && slider.length> 0) { %>
+                                <div class="container mt-4 mb-5">
+                                    <div id="heroCarousel" class="carousel slide shadow-lg rounded-4 overflow-hidden"
+                                        data-bs-ride="carousel">
+
+                                        <div class="carousel-indicators">
+                                            <% slider.forEach((blog, index)=>
+                                                { %>
+                                                <button type="button" data-bs-target="#heroCarousel"
+                                                    data-bs-slide-to="<%= index %>"
+                                                    class="<%= index === 0 ? 'active' : '' %>"
+                                                    aria-current="true"></button>
+                                                <% }) %>
+                                        </div>
+
+                                        <div class="carousel-inner">
+                                            <% slider.forEach((blog, index)=>
+                                                { %>
+                                                <div class="carousel-item <%= index === 0 ? 'active' : '' %>"
+                                                    data-bs-interval="5000">
+                                                    <div style="height: 500px; position: relative;">
+                                                        <img src="<%= blog.coverImageURL || getFallbackImage(blog) %>"
+                                                            class="d-block w-100 h-100"
+                                                            style="object-fit: cover; filter: brightness(0.6);"
+                                                            alt="<%= blog.title %>"
+                                                            onerror="this.onerror=null;this.src='<%= getFallbackImage(blog) %>';">
+
+                                                        <div class="carousel-caption d-none d-md-block text-start p-5"
+                                                            style="bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
+
+                                                            <span class="badge bg-danger mb-2">
+                                                                <i class="fa-solid fa-fire"></i>
+                                                                Trending
+                                                            </span>
+
+                                                            <h1 class="display-4 fw-bold text-white">
+                                                                <%= blog.title %>
+                                                            </h1>
+
+                                                            <p class="lead text-light" style="max-width: 800px;">
+                                                                <%= blog.body ? blog.body.substring(0, 120) : '' %>...
+                                                            </p>
+
+                                                            <a href="/blog/<%= blog._id %>"
+                                                                class="btn btn-ghost btn-lg mt-3 px-4 rounded-pill">
+                                                                Read Article <i
+                                                                    class="fa-solid fa-arrow-right ms-2"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% }) %>
+                                        </div>
+
+                                        <button class="carousel-control-prev" type="button"
+                                            data-bs-target="#heroCarousel" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button"
+                                            data-bs-target="#heroCarousel" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <!-- Talk of the Town Section -->
+                                    <div class="container mt-5">
+                                        <h3 class="text-white mb-4"><i
+                                                class="fa-solid fa-comments text-warning me-2"></i>
+                                            Talk of the Town
+                                        </h3>
+
+                                        <div class="row row-cols-1 row-cols-md-4 g-4" id="talkTownGrid">
+                                            <% trending.forEach((blog, index)=>
+                                                { %>
+                                                <div class="col <%= index >= 4 ? 'hidden-card' : '' %>">
+                                                    <div class="card h-100 hover-card text-white">
+                                                        <img src="<%= blog.coverImageURL || getFallbackImage(blog) %>"
+                                                            class="card-img-top" alt="<%= blog.title %>"
+                                                            onerror="this.onerror=null;this.src='<%= getFallbackImage(blog) %>';">
+                                                        <div class="card-body">
+                                                            <h6 class="card-title text-truncate">
+                                                                <%= blog.title %>
+                                                            </h6>
+                                                            <small class="text-muted">
+                                                                <%= (blog.views || 0) + ((blog.likes &&
+                                                                    blog.likes.length) || 0) * 2 %> Trending Score
+                                                            </small>
+                                                            <a href="/blog/<%= blog._id %>" class="stretched-link"></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% }) %>
+                                        </div>
+
+                                        <% if (trending.length> 4) { %>
+                                            <div class="text-center mt-4">
+                                                <button id="loadMoreBtn"
+                                                    class="btn btn-outline-warning rounded-pill px-4">
+                                                    View More <i class="fa-solid fa-chevron-down ms-2"></i>
+                                                </button>
+                                            </div>
+                                            <% } %>
+                                    </div>
+
+                                    <!-- Latest Drops Section -->
+                                    <div class="container mt-5">
+                                        <h3 class="text-white mb-4">Latest Drops 💥
+                                        </h3>
+                                        <div class="row row-cols-1 row-cols-md-3 g-4">
+                                            <% latest.forEach(blog=> { %>
+                                                <div class="col">
+                                                    <div class="card h-100 hover-card text-white">
+                                                        <img src="<%= blog.coverImageURL || getFallbackImage(blog) %>"
+                                                            class="card-img-top" alt="<%= blog.title %>"
+                                                            onerror="this.onerror=null;this.src='<%= getFallbackImage(blog) %>';">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">
+                                                                <%= blog.title %>
+                                                            </h5>
+                                                            <p class="card-text text-secondary small">
+                                                                <%= new Date(blog.createdAt).toLocaleDateString() %>
+                                                            </p>
+                                                            <a href="/blog/<%= blog._id %>" class="stretched-link"></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% }) %>
+                                        </div>
+                                        <div class="text-center mt-5 mb-5">
+                                            <a href="/blogs" class="btn btn-ghost px-5 py-2 rounded-pill">
+                                                View All Posts <i class="fa-solid fa-arrow-right ms-2"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Deep Dives Section -->
+                                    <div class="container mt-5 mb-5">
+                                        <h3 class="text-white mb-4">Deep Dives 🤿
+                                        </h3>
+                                        <div class="row row-cols-1 row-cols-md-2 g-4">
+                                            <% deepDives.forEach(blog=> { %>
+                                                <div class="col">
+                                                    <div class="card h-100 hover-card text-white">
+                                                        <img src="<%= blog.coverImageURL || getFallbackImage(blog) %>"
+                                                            class="card-img-top" alt="<%= blog.title %>"
+                                                            onerror="this.onerror=null;this.src='<%= getFallbackImage(blog) %>';">
+                                                        <div class="card-body d-flex flex-column">
+                                                            <div class="mb-2">
+                                                                <span
+                                                                    class="badge bg-dark border border-secondary text-info">
+                                                                    <%= Math.ceil((blog.body ? blog.body.split(' ').length : 0) / 200) %> min read
+                                                                </span>
+                                                            </div>
+                                                            <h5 class="card-title">
+                                                                <%= blog.title %>
+                                                            </h5>
+                                                            <p class="card-text small text-muted mt-auto">
+                                                                Long Form Content</p>
+                                                            <a href="/blog/<%= blog._id %>" class="stretched-link"></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% }) %>
+                                        </div>
+                                    </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            if (loadMoreBtn) {
+                loadMoreBtn.addEventListener('click', function () {
+                    const hiddenCards = document.querySelectorAll('#talkTownGrid .hidden-card');
+                    
+                    // Show next 4 
+                    for (let i = 0; i < 4 && i < hiddenCards.length; i++) {
+                        hiddenCards[i].classList.remove('hidden-card');
+                    }
+                    
+                    // Hide button if no more hidden cards
+                    if (document.querySelectorAll('#talkTownGrid .hidden-card').length === 0) {
+                        loadMoreBtn.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
+    <%- include('./partials/footer') %>
+    <%- include('./partials/scripts') %>
+</body>
+
+</html>

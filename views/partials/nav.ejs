@@ -1,0 +1,371 @@
+<link rel="stylesheet" href="https://unpkg.com/open-props/easings.min.css">
+
+<style>
+  /* --- 1. NAVBAR VARIABLES & LAYOUT --- */
+  :root {
+    --nav-height: 70px;
+    --icon-fill: #888;
+    --icon-fill-hover: #0dcaf0;
+    --nav-bg: rgba(5, 5, 5, 0.95);
+    --panel-bg: #0f172a;
+    /* Deep Navy for search panel */
+  }
+
+  /* THEME TOGGLE VARIABLES */
+
+
+  /* Navbar Container */
+  .custom-nav {
+    height: var(--nav-height);
+    background: var(--nav-bg);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: background 0.3s ease;
+  }
+
+  /* --- 2. NAVIGATION ICONS --- */
+  .nav-icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--icon-fill);
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .nav-icon-btn:hover,
+  .nav-icon-btn.active {
+    color: var(--icon-fill-hover);
+    background: rgba(13, 202, 240, 0.1);
+  }
+
+  /* --- 3. THE WRITE BUTTON --- */
+  .btn-write {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: #aaa;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .btn-write:hover {
+    border-color: #0dcaf0;
+    color: #0dcaf0;
+    transform: translateY(-1px);
+  }
+
+  /* --- 4. THEME TOGGLE (Your Custom Code) --- */
+  .theme-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    inline-size: 2rem;
+    block-size: 2rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    outline-offset: 5px;
+  }
+
+  .sun-and-moon> :is(.moon, .sun, .sun-beams) {
+    transform-origin: center;
+  }
+
+  .sun-and-moon> :is(.moon, .sun) {
+    fill: var(--icon-fill);
+  }
+
+  .theme-toggle:is(:hover, :focus-visible)>.sun-and-moon> :is(.moon, .sun) {
+    fill: var(--icon-fill-hover);
+  }
+
+  .sun-and-moon>.sun-beams {
+    stroke: var(--icon-fill);
+    stroke-width: 2px;
+  }
+
+  .theme-toggle:is(:hover, :focus-visible) .sun-and-moon>.sun-beams {
+    stroke: var(--icon-fill-hover);
+  }
+
+  [data-theme="dark"] .sun-and-moon>.sun {
+    transform: scale(1.75);
+  }
+
+  [data-theme="dark"] .sun-and-moon>.sun-beams {
+    opacity: 0;
+  }
+
+  [data-theme="dark"] .sun-and-moon>.moon>circle {
+    transform: translateX(-7px);
+  }
+
+  @supports (cx: 1) {
+    [data-theme="dark"] .sun-and-moon>.moon>circle {
+      cx: 17;
+      transform: translateX(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sun-and-moon>.sun {
+      transition: transform .5s var(--ease-elastic-3);
+    }
+
+    .sun-and-moon>.sun-beams {
+      transition: transform .5s var(--ease-elastic-4), opacity .5s var(--ease-3);
+    }
+
+    .sun-and-moon .moon>circle {
+      transition: transform .25s var(--ease-out-5);
+    }
+
+    @supports (cx: 1) {
+      .sun-and-moon .moon>circle {
+        transition: cx .25s var(--ease-out-5);
+      }
+    }
+
+    [data-theme="dark"] .sun-and-moon>.sun {
+      transition-timing-function: var(--ease-3);
+      transition-duration: .25s;
+      transform: scale(1.75);
+    }
+
+    [data-theme="dark"] .sun-and-moon>.sun-beams {
+      transition-duration: .15s;
+      transform: rotateZ(-25deg);
+    }
+
+    [data-theme="dark"] .sun-and-moon>.moon>circle {
+      transition-duration: .5s;
+      transition-delay: .25s;
+    }
+  }
+
+  /* --- 5. THE HIDDEN SEARCH PANEL --- */
+  #searchPanel {
+    background: var(--panel-bg);
+    border-bottom: 1px solid rgba(13, 202, 240, 0.2);
+    overflow: hidden;
+    height: 0;
+    /* Hidden by default */
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Apple-style slide */
+    position: fixed;
+    top: var(--nav-height);
+    width: 100%;
+    z-index: 999;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  #searchPanel.open {
+    height: 80px;
+    opacity: 1;
+  }
+
+  .search-input-lg {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 300;
+    width: 100%;
+    outline: none;
+  }
+
+  [data-theme="light"] .search-input-lg {
+    color: #000;
+  }
+
+  [data-theme="light"] .search-input-lg {
+    color: #000;
+  }
+
+  .navbar-toggler {
+    display: none;
+    /* Hidden on desktop */
+    background: transparent;
+    border: none;
+    padding: 10px;
+    z-index: 1001;
+  }
+</style>
+
+<nav class="custom-nav d-flex align-items-center">
+  <div class="container d-flex justify-content-between align-items-center">
+
+    <a class="navbar-brand fw-bold text-light" href="/" style="font-family: 'Cinzel', serif; letter-spacing: 1px;">THE
+      AKASHIC RECORDS</a>
+
+    <button class="navbar-toggler" type="button" onclick="toggleNavbar()" aria-label="Toggle navigation">
+      <i class="fa-solid fa-bars text-light fa-lg"></i>
+    </button>
+
+    <div class="d-flex align-items-center gap-3" id="navbarContent">
+
+      <!-- Row 1: Icons & Profile -->
+      <div class="nav-group-icons d-flex align-items-center gap-3">
+        <button class="nav-icon-btn" onclick="toggleSearch()" title="Search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+        <a href="/" class="nav-icon-btn home-icon" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+
+        <% if (locals.user) { %>
+          <a href="/blog/add-new" class="btn-write">
+            <i class="fa-regular fa-pen-to-square"></i> <span>Write</span>
+          </a>
+          <% } %>
+
+            <button class="theme-toggle" id="theme-toggle" title="Toggles light & dark" aria-label="auto"
+              aria-live="polite">
+              <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                <mask class="moon" id="moon-mask">
+                  <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                  <circle cx="24" cy="10" r="6" fill="black" />
+                </mask>
+                <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
+                <g class="sun-beams" stroke="currentColor">
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </g>
+              </svg>
+            </button>
+
+            <% if (locals.user) { %>
+              <div class="dropdown">
+                <button class="btn nav-icon-btn dropdown-toggle border-0" type="button" data-bs-toggle="dropdown">
+                  <img src="<%= user.profileImageURL ? user.profileImageURL : '/images/default_profile.jpeg' %>"
+                    class="rounded-circle border border-secondary" style="width: 30px; height: 30px;"
+                    onerror="this.onerror=null; this.src='/images/default_profile.jpeg';">
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end bg-dark border-secondary">
+                  <li><a class="dropdown-item text-light" href="/user/profile">Profile</a></li>
+                  <li>
+                    <hr class="dropdown-divider bg-secondary">
+                  </li>
+                  <li><a class="dropdown-item text-danger" href="/user/logout">Logout</a></li>
+                </ul>
+              </div>
+              <% } %>
+      </div>
+
+      <!-- Row 2: Auth Buttons (Only if not logged in) -->
+      <% if (!locals.user) { %>
+        <div class="nav-group-auth d-flex align-items-center gap-2">
+          <a href="/user/signin" class="btn btn-sm btn-outline-light rounded-pill px-3">Sign In</a>
+          <a href="/user/signup" class="btn btn-sm btn-info rounded-pill px-3 fw-bold">Get Started</a>
+        </div>
+        <% } %>
+
+    </div>
+  </div>
+</nav>
+
+<div id="searchPanel">
+  <div class="container h-100 d-flex align-items-center">
+    <form action="/search" method="GET" class="w-100 d-flex align-items-center gap-3">
+      <i class="fa-solid fa-magnifying-glass fa-xl text-info"></i>
+      <input type="search" name="query" id="searchInput" class="search-input-lg" placeholder="Search the Akasha..."
+        autocomplete="off">
+      <button type="button" onclick="toggleSearch()" class="btn btn-link text-secondary text-decoration-none">
+        <i class="fa-solid fa-xmark fa-xl"></i>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // --- 1. SEARCH PANEL LOGIC ---
+  function toggleSearch() {
+    const panel = document.getElementById('searchPanel');
+    const input = document.getElementById('searchInput');
+    const navbarContent = document.getElementById('navbarContent'); // Get navbar content
+
+    // Close navbar if open so search panel is visible
+    if (navbarContent.classList.contains('show')) {
+      navbarContent.classList.remove('show');
+    }
+
+    panel.classList.toggle('open');
+
+    if (panel.classList.contains('open')) {
+      setTimeout(() => input.focus(), 100); // Focus input after slide
+    }
+  }
+
+  // --- 2. THEME TOGGLE LOGIC (Your Provided Code) ---
+  const storageKey = 'theme-preference'
+
+  const onClick = () => {
+    theme.value = theme.value === 'light' ? 'dark' : 'light'
+    setPreference()
+  }
+
+  const getColorPreference = () => {
+    if (localStorage.getItem(storageKey))
+      return localStorage.getItem(storageKey)
+    else
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  }
+
+  const setPreference = () => {
+    localStorage.setItem(storageKey, theme.value)
+    reflectPreference()
+  }
+
+  const reflectPreference = () => {
+    document.firstElementChild.setAttribute('data-theme', theme.value)
+    document.querySelector('#theme-toggle')?.setAttribute('aria-label', theme.value)
+
+    // Toggle the 'light-mode' class for global inversion style.css
+    document.documentElement.classList.toggle('light-mode', theme.value === 'light');
+  }
+
+  const theme = { value: getColorPreference() }
+
+  // set early so no page flashes
+  reflectPreference()
+
+  window.onload = () => {
+    reflectPreference()
+    document.querySelector('#theme-toggle').addEventListener('click', onClick)
+  }
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({ matches: isDark }) => {
+    theme.value = isDark ? 'dark' : 'light'
+    setPreference()
+  })
+</script>
+
+<script>
+  function toggleNavbar() {
+    const content = document.getElementById('navbarContent');
+    content.classList.toggle('show');
+
+    // Optional: Add slide animation height if desired, or stick to CSS display/opacity
+  }
+</script>

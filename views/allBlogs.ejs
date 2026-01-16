@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/heads') %>
+        <title>All Blogs | Blogify</title>
+</head>
+
+<body
+    style="background: radial-gradient(circle at top, rgba(26, 28, 41, 0.7), rgba(13, 13, 13, 0.9)), url('/images/intersteller.jpg') no-repeat center center/cover; min-height: 100vh; color: white; background-attachment: fixed;">
+    <%- include('./partials/nav') %>
+
+        <div class="container mt-5">
+            <h1 class="text-center fw-bold mb-2">Explore All Posts</h1>
+            <p class="text-center text-muted mb-5">Browse our entire collection of articles.</p>
+
+            <div class="row justify-content-center mb-5">
+                <div class="col-md-6">
+                    <form action="/search" method="GET" class="d-flex gap-2">
+                        <input type="text" name="query" value="<%= locals.query || '' %>"
+                            class="form-control bg-dark text-white border-secondary" placeholder="Search topics...">
+                        <button class="btn btn-cyan" type="submit">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+                <% blogs.forEach(blog=> { %>
+                    <div class="col">
+                        <div class="card h-100 bg-dark text-white border-secondary shadow-sm hover-card">
+                            <img src="<%= (blog.coverImageURL && blog.coverImageURL.includes('/upload/')) ? blog.coverImageURL.replace('/upload/', '/upload/f_jpg,q_auto,w_600/') : blog.coverImageURL %>"
+                                class="card-img-top" style="height: 220px; object-fit: cover;" alt="<%= blog.title %>"
+                                onerror="fallbackBlogImage(this, '<%= (blog.createdBy && blog.createdBy._id) ? blog.createdBy._id : blog.createdBy %>')">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= blog.title %>
+                                </h5>
+                                <p class="card-text text-secondary small">
+                                    By <%= blog.createdBy ? blog.createdBy.fullName : 'Unknown' %>
+                                </p>
+                                <a href="/blog/<%= blog._id %>" class="stretched-link"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+        </div>
+
+        <%- include('./partials/scripts') %>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/heads') %>
+        <title>Edit Blog</title>
+        <!-- EasyMDE Markdown Editor -->
+        <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+        <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+</head>
+
+<body
+    style="background: radial-gradient(circle at top, rgba(26, 28, 41, 0.7), rgba(13, 13, 13, 0.9)), url('/images/intersteller.jpg') no-repeat center center/cover; min-height: 100vh; color: white; background-attachment: fixed;">
+    <%- include('./partials/nav') %>
+        <div class="container mt-4">
+            <h2>Edit Blog</h2>
+            <form action="/blog/<%= blog._id %>/edit" method="post" enctype="multipart/form-data">
+                <div class="mb-4">
+                    <label class="form-label text-light fw-bold">Cover Image (choose to replace)</label>
+                    <div class="file-upload-wrapper p-4 border border-secondary rounded-3 text-center"
+                        style="background: rgba(255, 255, 255, 0.05); cursor: pointer; position: relative;"
+                        onclick="document.getElementById('coverImageInput').click();">
+
+                        <i class="fa-solid fa-cloud-arrow-up fa-2x text-cyan mb-2"></i>
+                        <p class="mb-0 text-muted">Click to upload new cover</p>
+
+                        <input type="file" name="coverImage" id="coverImageInput" class="d-none"
+                            onchange="previewCoverFile()">
+                    </div>
+                    <small id="coverFileName" class="text-cyan mt-2 d-block"></small>
+                    <small class="form-text text-muted mt-1">Current: <%= blog.coverImageURL %></small>
+                </div>
+                <script>
+                    function previewCoverFile() {
+                        const fileInput = document.getElementById('coverImageInput');
+                        const fileNameDisplay = document.getElementById('coverFileName');
+                        if (fileInput.files.length > 0) {
+                            fileNameDisplay.innerText = "Selected: " + fileInput.files[0].name;
+                        }
+                    }
+                </script>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" value="<%= blog.title %>"
+                        maxlength="40">
+                </div>
+                <div class="mb-3">
+                    <label for="body">Body</label>
+                    <textarea class="form-control" id="body" name="body" rows="10"><%= blog.body %></textarea>
+                </div>
+                <button type="submit" class="btn btn-cyan px-4">Save Changes</button>
+                <a href="/blog/<%= blog._id %>" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+        <%- include('./partials/scripts') %>
+            <script>
+                const easyMDE = new EasyMDE({ element: document.getElementById('body') });
+            </script>
+</body>
+
+</html>

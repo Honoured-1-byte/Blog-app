@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/heads') %>
+        <title>
+            <%= blog.title %>
+        </title>
+</head>
+
+<body>
+    <%- include('./partials/nav') %>
+
+
+
+        <div class="container-fluid p-0 mb-4 position-relative">
+            <div class="blog-banner position-relative overflow-hidden">
+                <% const defaultImages={ "693dc46dd348ddc001c50af9" : "/images/default_ashvashira.jpg"
+                    , "693dc57bd348ddc001c50b02" : "/images/default_yantrik.jpg" , "693dc5fcd348ddc001c50b0f"
+                    : "/images/default_otaku.jpg" , "6935b54cec77d3663f57f863" : "/images/default_sutradhar.png"
+                    , "6944f46d02303e61a6d0a343" : "/images/default_ayur.png" }; let
+                    fallbackImage='/images/defaultBlog.png' ; const creatorId=blog.createdBy ? (blog.createdBy._id ||
+                    blog.createdBy).toString() : null; if (creatorId && defaultImages[creatorId]) {
+                    fallbackImage=defaultImages[creatorId]; } %>
+                    <img src="<%= blog.coverImageURL || fallbackImage %>" alt="<%= blog.title %> Cover"
+                        class="position-absolute w-100 h-100" style="object-fit: cover; z-index: 0; top: 0; left: 0;"
+                        onerror="this.onerror=null;this.src='<%= fallbackImage %>';">
+
+                    <div class="banner-overlay position-relative" style="z-index: 1;">
+                        <div
+                            class="container h-100 d-flex flex-column justify-content-center align-items-center text-center">
+                            <h1 class="display-3 fw-bold text-white text-shadow">
+                                <%= blog.title %>
+                            </h1>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <div class="container mt-5">
+            <div class="row">
+                <!-- Main Content -->
+                <div class="col-lg-8 mx-auto blog-content">
+
+                    <div class="mt-3 mb-4 text-center text-md-start">
+                        <button id="likeBtn" class="btn btn-outline-danger rounded-pill px-4"
+                            onclick="toggleLike('<%= blog._id %>')">
+                            <% if (locals.user && blog.likes && blog.likes.includes(user._id)) { %>
+                                <i id="likeIcon" class="fa-solid fa-heart"></i>
+                                <% } else { %>
+                                    <i id="likeIcon" class="fa-regular fa-heart"></i>
+                                    <% } %>
+
+                                        <span class="ms-2 fw-bold" id="likeCount">
+                                            <%= blog.likes ? blog.likes.length : 0 %>
+                                        </span> Likes
+                        </button>
+
+                        <button id="saveBtn" class="btn btn-outline-info rounded-pill px-4 ms-2"
+                            onclick="toggleSave('<%= blog._id %>')">
+                            <% if (locals.user && user.savedBlogs && user.savedBlogs.includes(blog._id)) { %>
+                                <i id="saveIcon" class="fa-solid fa-bookmark"></i> <span id="saveText">Saved</span>
+                                <% } else { %>
+                                    <i id="saveIcon" class="fa-regular fa-bookmark"></i> <span id="saveText">Save</span>
+                                    <% } %>
+                        </button>
+                    </div>
+
+                    <script>
+                        async function toggleLike(blogId) {
+                            const btn = document.getElementById('likeBtn');
+                            const icon = document.getElementById('likeIcon');
+                            const countSpan = document.getElementById('likeCount');
+
+                            // 1. Call the Backend
+                            const response = await fetch(`/blog/like/${blogId}`);
+                            const data = await response.json();
+
+                            // 2. Handle Errors (Not logged in)
+                            if (response.status === 401) {
+                                alert(data.error); // Or redirect to login
+                                return;
+                            }
+
+                            // 3. Update the UI instantly
+                            let currentCount = parseInt(countSpan.innerText);
+
+                            if (data.status === 'liked') {
+                                icon.classList.remove('fa-regular');
+                                icon.classList.add('fa-solid'); // Fill the heart
+                                countSpan.innerText = currentCount + 1;
+                            } else {
+                                icon.classList.remove('fa-solid');
+                                icon.classList.add('fa-regular'); // Empty the heart
+                                countSpan.innerText = currentCount - 1;
+                            }
+                        }
+
+                        async function toggleSave(blogId) {
+                            const btn = document.getElementById('saveBtn');
+                            const icon = document.getElementById('saveIcon');
+                            const text = document.getElementById('saveText');
+
+                            const response = await fetch(`/blog/save/${blogId}`);
+                            const data = await response.json();
+
+                            if (response.status === 401) return alert("Please login to save");
+
+                            if (data.status === 'saved') {
+                                icon.classList.remove('fa-regular');
+                                icon.classList.add('fa-solid');
+                                text.innerText = "Saved";
+                            } else {
+                                icon.classList.remove('fa-solid');
+                                icon.classList.add('fa-regular');
+                                text.innerText = "Save";
+                            }
+                        }
+                    </script>
+
+                    <div class="blog-body mb-5">
+                        <%- blog.body %>
+                    </div>
+
+                    <div class="mb-4">
+                        <% if (user && String(user._id)===String(blog.createdBy && blog.createdBy._id)) { %>
+                            <a href="/blog/<%= blog._id %>/edit" class="btn btn-outline-warning me-2">Edit</a>
+                            <a href="/blog/<%= blog._id %>/delete" class="btn btn-outline-danger"
+                                onclick="return confirm('Delete this blog?')">Delete</a>
+                            <% } %>
+                    </div>
+
+                    <hr class="mb-5">
+
+                    <!-- Comments Section -->
+                    <div>
+                        <h4>Comments (<%= comments ? comments.length : 0 %>)</h4>
+
+                        <!-- Add Comment Form -->
+                        <% if (locals.user) { %>
+                            <form action="/blog/comment/<%= blog._id %>" method="post" class="mt-3 mb-5">
+                                <div class="mb-3">
+                                    <textarea class="form-control" name="content" placeholder="Add a comment..."
+                                        rows="3" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-subtle-primary">Post Comment</button>
+                            </form>
+                            <% } else { %>
+                                <p class="mt-3 text-muted"><a href="/user/signin">Sign in</a> to leave a comment.
+                                </p>
+                                <% } %>
+
+                                    <div class="comment-list">
+                                        <% if (comments && comments.length> 0) { %>
+                                            <% comments.forEach(comment=> { %>
+                                                <div class="card comment-card mb-3">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-center mb-2">
+                                                            <img src="<%= comment.createdBy.profileImageURL %>"
+                                                                alt="<%= comment.createdBy.fullName %>"
+                                                                class="rounded-circle me-2"
+                                                                style="width: 30px; height: 30px; object-fit: cover;">
+                                                            <div>
+                                                                <strong class="text-white">
+                                                                    <%= comment.createdBy.fullName %>
+                                                                </strong>
+                                                                <small class="text-muted d-block"
+                                                                    style="font-size: 0.8rem;">
+                                                                    <%= new Date(comment.createdAt).toLocaleDateString()
+                                                                        %>
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                        <p class="card-text comment-content m-0">
+                                                            <%= comment.content %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <% }) %>
+                                                    <% } else { %>
+                                                        <p class="text-muted">No comments yet. Be the first to
+                                                            comment!
+                                                        </p>
+                                                        <% } %>
+                                    </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <div class="sidebar-sticky">
+                        <!-- Author Card -->
+                        <div class="card mb-4" style="background: var(--card-bg);">
+                            <div class="card-body author-card">
+                                <% if (blog.createdBy) { %>
+                                    <a href="/user/u/<%= blog.createdBy._id %>" class="text-decoration-none">
+                                        <img src="<%= (blog.createdBy && blog.createdBy.profileImageURL) ? blog.createdBy.profileImageURL : '/images/default_profile.jpeg' %>"
+                                            alt="Author" class="author-large-img"
+                                            onerror="this.onerror=null; this.src='/images/default_profile.jpeg';">
+                                        <h5 class="card-title mb-1 text-white">
+                                            <%= blog.createdBy.fullName %>
+                                        </h5>
+                                    </a>
+                                    <% } else { %>
+                                        <img src="/images/default.jpeg" alt="Author" class="author-large-img">
+                                        <h5 class="card-title mb-1">Unknown</h5>
+                                        <% } %>
+                                            <p class="text-muted small mb-3">Author</p>
+                                            <!-- Placeholder bio or extra info could go here -->
+                            </div>
+                        </div>
+
+                        <!-- Related Blogs -->
+                        <% if (relatedBlogs && relatedBlogs.length> 0) { %>
+                            <div class="card mb-4" style="background: var(--card-bg);">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">Related Posts</h5>
+                                    <% relatedBlogs.forEach(rb=> { %>
+                                        <a href="/blog/<%= rb._id %>" class="related-blog-item">
+                                            <img src="<%= (rb.coverImageURL && rb.coverImageURL.includes('/upload/')) ? rb.coverImageURL.replace('/upload/', '/upload/f_jpg,q_auto,w_600/') : rb.coverImageURL %>"
+                                                class="related-blog-img" alt="<%= rb.title %>"
+                                                onerror="fallbackBlogImage(this, '<%= (rb.createdBy && rb.createdBy._id) ? rb.createdBy._id : rb.createdBy %>')">
+                                            <div>
+                                                <h6 class="mb-1 text-white text-truncate" style="max-width: 180px;">
+                                                    <%= rb.title %>
+                                                </h6>
+                                                <small class="text-muted">Read More</small>
+                                            </div>
+                                        </a>
+                                        <% }) %>
+                                </div>
+                            </div>
+                            <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('./partials/footer') %>
+            <%- include('./partials/scripts') %>
+</body>
+
+</html>

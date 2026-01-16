@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/heads') %>
+        <title>Signup</title>
+        <link rel="preload" as="image"
+            href="https://res.cloudinary.com/dnyg7ue5v/image/upload/f_auto,q_auto/v1765452879/-Buddha_ojlarp.jpg">
+</head>
+
+<body>
+    <%- include('./partials/nav') %>
+
+        <div class="split-screen signup-bg">
+            <div class="auth-left">
+                <div class="auth-box">
+                    <h2>Sign Up</h2>
+                    <form action="/user/signup" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" required
+                                style="opacity: 0.5;">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                aria-describedby="emailHelp" required style="opacity: 0.5;">
+                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required
+                                style="opacity: 0.5;">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-light fw-bold">Profile Image</label>
+                            <div class="file-upload-wrapper p-4 border border-secondary rounded-3 text-center"
+                                style="background: rgba(255, 255, 255, 0.05); cursor: pointer; position: relative;"
+                                onclick="document.getElementById('profileImageInput').click();">
+
+                                <i class="fa-solid fa-cloud-arrow-up fa-2x text-cyan mb-2"></i>
+                                <p class="mb-0 text-muted">Click to upload avatar</p>
+
+                                <input type="file" name="profileImage" id="profileImageInput" class="d-none"
+                                    onchange="previewProfileFile()">
+                            </div>
+                            <small id="profileFileName" class="text-cyan mt-2 d-block"></small>
+                        </div>
+                        <script>
+                            function previewProfileFile() {
+                                const fileInput = document.getElementById('profileImageInput');
+                                const fileNameDisplay = document.getElementById('profileFileName');
+                                if (fileInput.files.length > 0) {
+                                    fileNameDisplay.innerText = "Selected: " + fileInput.files[0].name;
+                                }
+                            }
+                        </script>
+                        <button type="submit" class="btn btn-cyan px-4 py-2 rounded-pill w-100">Sign Up</button>
+                    </form>
+                </div>
+            </div>
+            <div class="auth-right mirror-bg">
+            </div>
+        </div>
+        <%- include('./partials/footer') %>
+            <%- include('./partials/scripts') %>
+</body>
+
+</html>

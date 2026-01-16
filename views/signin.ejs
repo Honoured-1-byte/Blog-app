@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/heads') %>
+        <title>Signin</title>
+        <link rel="preload" as="image"
+            href="https://res.cloudinary.com/dnyg7ue5v/image/upload/f_auto,q_auto/v1765452877/Buddha_sz0tpe.jpg">
+</head>
+
+<body>
+    <%- include('./partials/nav') %>
+
+        <div class="split-screen signin-bg">
+            <div class="auth-left">
+                <div class="auth-box">
+                    <h2>Sign In</h2>
+                    <% if (error) { %>
+                        <div class="alert alert-danger" role="alert">
+                            <%= error %>
+                        </div>
+                        <% } %>
+                            <form action="/user/signin" method="post">
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="exampleInputEmail1" name="email"
+                                        aria-describedby="emailHelp" style="opacity: 0.5;">
+                                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="exampleInputPassword1"
+                                        name="password" style="opacity: 0.5;">
+                                </div>
+                                <button type="submit" class="btn btn-cyan px-4 py-2 rounded-pill w-100">Sign In</button>
+                            </form>
+                </div>
+            </div>
+            <div class="auth-right mirror-bg">
+            </div>
+        </div>
+        <%- include('./partials/footer') %>
+            <%- include('./partials/scripts') %>
+</body>
+
+</html>

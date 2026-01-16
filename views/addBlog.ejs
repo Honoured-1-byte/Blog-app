@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/heads') %>
+        <title>Add New Blog</title>
+        <!-- EasyMDE Markdown Editor -->
+        <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+        <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+</head>
+
+<body>
+    <%- include('./partials/nav') %>
+
+        <div
+            style="background: radial-gradient(circle at top, rgba(26, 28, 41, 0.7), rgba(13, 13, 13, 0.9)), url('/images/intersteller.jpg') no-repeat center center/cover; min-height: 100vh; color: white; display: flex; align-items: center; justify-content: center;">
+            <div class="container">
+                <div class="editor-container">
+                    <form action="/blog" method="post" enctype="multipart/form-data">
+
+                        <div class="mb-4">
+                            <label class="form-label text-light fw-bold">Cover Image</label>
+                            <div class="file-upload-wrapper p-4 border border-secondary rounded-3 text-center"
+                                style="background: rgba(255, 255, 255, 0.05); cursor: pointer; position: relative;"
+                                onclick="document.getElementById('fileInput').click();">
+
+                                <i class="fa-solid fa-cloud-arrow-up fa-2x text-cyan mb-2"></i>
+                                <p class="mb-0 text-muted">Click to upload cover image</p>
+
+                                <input type="file" name="coverImage" id="fileInput" class="d-none"
+                                    onchange="previewFile()">
+                            </div>
+                            <small id="fileName" class="text-cyan mt-2 d-block"></small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" aria-describedby="titleHelp"
+                                maxlength="40">
+                        </div>
+                        <div class="mb-3">
+                            <label for="body">Body</label>
+                            <textarea class="form-control" id="body" name="body"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-cyan px-5 py-2 rounded-pill">Publish Blog</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <%- include('./partials/footer') %>
+            <%- include('./partials/scripts') %>
+                <script>
+                    function previewFile() {
+                        const fileInput = document.getElementById('fileInput');
+                        const fileNameDisplay = document.getElementById('fileName');
+                        if (fileInput.files.length > 0) {
+                            fileNameDisplay.innerText = "Selected: " + fileInput.files[0].name;
+                        }
+                    }
+                </script>
+                <script>
+                    const easyMDE = new EasyMDE({ element: document.getElementById('body') });
+                </script>
+</body>
+
+</html>
