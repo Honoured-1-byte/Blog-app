@@ -767,13 +767,18 @@ a:hover {
   opacity: 1;
 }
 
-/* Explicit Background Rules */
+/* Explicit Background Rules representing the correct images */
+/* Explicit Background Rules representing the correct images */
 .signin-bg::before {
-  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452879/-Buddha_ojlarp.jpg');
+  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452879/-Buddha_ojlarp.jpg') !important;
+  z-index: 0 !important;
+  /* Fix visibility issue */
 }
 
 .signup-bg::before {
-  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452877/Buddha_sz0tpe.jpg');
+  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/v1765452877/Buddha_sz0tpe.jpg') !important;
+  z-index: 0 !important;
+  /* Fix visibility issue */
 }
 
 /* 2. Make the left panel transparent and blurry */
@@ -984,11 +989,7 @@ a:hover {
   transform: scaleX(-1);
 }
 
-/* Sign-In Specific Background */
-.signin-bg::before {
-  /* Added a_hflip to vertically mirror the image (Horizontal flip) via Cloudinary */
-  background-image: url('https://res.cloudinary.com/dnyg7ue5v/image/upload/a_hflip,f_auto,q_auto/v1765452877/Buddha_sz0tpe.jpg') !important;
-}
+
 
 /* 1. The Magic Flip Class */
 html.light-mode {
