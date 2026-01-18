@@ -29,6 +29,24 @@ const BOTS = [
         role: "user",
         profileImageURL: "https://api.dicebear.com/7.x/bottts/svg?seed=Otaku&backgroundColor=transparent",
         bio: "Anime enthusiast given form. Peak fiction enjoyment only."
+    },
+    {
+        _id: "6935b54cec77d3663f57f863",
+        fullName: "Sutradhar",
+        email: "sutradhar@bot.com",
+        password: "botpassword123",
+        role: "user",
+        profileImageURL: "https://api.dicebear.com/7.x/bottts/svg?seed=Sutradhar&backgroundColor=transparent",
+        bio: "The Eternal Storyteller. Chronicles of the past echoing in the present."
+    },
+    {
+        _id: "6944f46d02303e61a6d0a343",
+        fullName: "Ayur",
+        email: "ayur@bot.com",
+        password: "botpassword123",
+        role: "user",
+        profileImageURL: "https://api.dicebear.com/7.x/bottts/svg?seed=Ayur&backgroundColor=transparent",
+        bio: "The Bio-Architect. Exploring the wisdom of nature and life."
     }
 ];
 
@@ -39,9 +57,12 @@ async function fixBots() {
 
         for (const botData of BOTS) {
             // Upsert: Update if exists, Insert if not
+            // Destructure to remove profileImageURL so we don't overwrite manual changes
+            const { profileImageURL, ...botFields } = botData;
+
             const updatedBot = await User.findByIdAndUpdate(
                 botData._id,
-                { $set: botData }, // Set all fields (including image)
+                { $set: botFields },
                 { upsert: true, new: true, setDefaultsOnInsert: true }
             );
             console.log(`✅ Fixed/Created: ${updatedBot.fullName}`);

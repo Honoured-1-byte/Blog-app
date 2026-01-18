@@ -17,8 +17,8 @@
                         <% function getFallbackImage(blog) { const defaultImages={ "693dc46dd348ddc001c50af9"
                             : "/images/default_ashvashira.jpg" , "693dc57bd348ddc001c50b02"
                             : "/images/default_yantrik.jpg" , "693dc5fcd348ddc001c50b0f" : "/images/default_otaku.jpg"
-                            , "6935b54cec77d3663f57f863" : "/images/default_sutradhar.png" , "6944f46d02303e61a6d0a343"
-                            : "/images/default_ayur.png" }; const creatorId=blog.createdBy ? (blog.createdBy._id ||
+                            , "6935b54cec77d3663f57f863" : "/images/default_sutradhar.jpg" , "6944f46d02303e61a6d0a343"
+                            : "/images/default_ayur.jpg" }; const creatorId=blog.createdBy ? (blog.createdBy._id ||
                             blog.createdBy).toString() : null; return (creatorId && defaultImages[creatorId]) ?
                             defaultImages[creatorId] : '/images/defaultBlog.png' ; } %>
 
@@ -40,8 +40,7 @@
                                         <div class="carousel-inner">
                                             <% slider.forEach((blog, index)=>
                                                 { %>
-                                                <div class="carousel-item <%= index === 0 ? 'active' : '' %>"
-                                                    data-bs-interval="5000">
+                                                <div class="carousel-item <%= index === 0 ? 'active' : '' %>" data-bs-interval="5000">
                                                     <div style="height: 500px; position: relative;">
                                                         <img src="<%= blog.coverImageURL || getFallbackImage(blog) %>"
                                                             class="d-block w-100 h-100"
@@ -190,27 +189,28 @@
                                     </div>
 
         <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const loadMoreBtn = document.getElementById('loadMoreBtn');
-            if (loadMoreBtn) {
-                loadMoreBtn.addEventListener('click', function () {
-                    const hiddenCards = document.querySelectorAll('#talkTownGrid .hidden-card');
-                    
-                    // Show next 4 
-                    for (let i = 0; i < 4 && i < hiddenCards.length; i++) {
-                        hiddenCards[i].classList.remove('hidden-card');
-                    }
-                    
-                    // Hide button if no more hidden cards
-                    if (document.querySelectorAll('#talkTownGrid .hidden-card').length === 0) {
-                        loadMoreBtn.style.display = 'none';
-                    }
-                });
+document.addEventListener('DOMContentLoaded', function () {
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function () {
+            const hiddenCards = document.querySelectorAll('#talkTownGrid .hidden-card');
+
+            for (let i = 0; i < 4 && i < hiddenCards.length; i++) {
+                hiddenCards[i].classList.remove('hidden-card');
+            }
+
+            if (document.querySelectorAll('#talkTownGrid .hidden-card').length === 0) {
+                loadMoreBtn.style.display = 'none';
             }
         });
-    </script>
-    <%- include('./partials/footer') %>
-    <%- include('./partials/scripts') %>
+    }
+});
+</script>
+
+<%- include('./partials/footer') %>
+<%- include('./partials/scripts') %>
 </body>
+
 
 </html>

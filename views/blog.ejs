@@ -17,8 +17,8 @@
             <div class="blog-banner position-relative overflow-hidden">
                 <% const defaultImages={ "693dc46dd348ddc001c50af9" : "/images/default_ashvashira.jpg"
                     , "693dc57bd348ddc001c50b02" : "/images/default_yantrik.jpg" , "693dc5fcd348ddc001c50b0f"
-                    : "/images/default_otaku.jpg" , "6935b54cec77d3663f57f863" : "/images/default_sutradhar.png"
-                    , "6944f46d02303e61a6d0a343" : "/images/default_ayur.png" }; let
+                    : "/images/default_otaku.jpg" , "6935b54cec77d3663f57f863" : "/images/default_sutradhar.jpg"
+                    , "6944f46d02303e61a6d0a343" : "/images/default_ayur.jpg" }; let
                     fallbackImage='/images/defaultBlog.png' ; const creatorId=blog.createdBy ? (blog.createdBy._id ||
                     blog.createdBy).toString() : null; if (creatorId && defaultImages[creatorId]) {
                     fallbackImage=defaultImages[creatorId]; } %>

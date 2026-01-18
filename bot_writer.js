@@ -137,9 +137,8 @@ async function generateBotPost() {
         // 3. GENERATE WITH FALLBACK
         const { text, modelName } = await generateContentWithFallback(prompt);
 
-        // Clean JSON: Extract the first JSON object found in the text
-        const jsonMatch = text.match(/\{[\s\S]*\}/);
-        const cleanJson = jsonMatch ? jsonMatch[0] : text;
+        // Clean JSON: Remove markdown code blocks if present
+        const cleanJson = text.replace(/```json/g, '').replace(/```/g, '');
         let blogData;
 
         try {
@@ -186,12 +185,7 @@ async function generateBotPost() {
             if (!type || !type.startsWith('image')) {
                 console.warn(`⚠️ API returned ${type} (Not an image). Switching to Default.`);
                 validImageUrl = "";
-            }
-            // 2. Check size (Glitch images are usually < 4KB. Valid simpler images can be 20KB+)
-            else if (size < 5000) {
-                console.warn(`⚠️ Image too small (${size} bytes). Glitch detected. Switching to Default.`);
-                validImageUrl = "";
-            } else {
+            }else {
                 console.log("✅ AI Art Verified & Live.");
             }
         } catch (imgError) {
